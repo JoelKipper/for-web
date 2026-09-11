@@ -77,7 +77,26 @@ export type TypeSounds = {
    * Play a sound when a user moves channels
    */
   userMoved: boolean;
+
+  /**
+   * Volume multiplier applied to all sound effects (0-1). 1 = normal volume.
+   */
+  volume: number;
+
+  /**
+   * Per-sound volume multipliers (0-1). 1 = normal volume for that sound.
+   * Applied on top of the global `volume` multiplier.
+   */
+  soundVolumes: Record<ToggleableSound, number>;
 };
+
+/**
+ * Sound settings which can be toggled on/off
+ */
+export type ToggleableSound = Exclude<
+  keyof TypeSounds,
+  "volume" | "soundVolumes"
+>;
 
 export class Sounds extends AbstractStore<"sounds", TypeSounds> {
   constructor(state: State) {
@@ -103,6 +122,24 @@ export class Sounds extends AbstractStore<"sounds", TypeSounds> {
       userLeaveVoice: true,
       userSelfLeaveVoice: true,
       userMoved: true,
+      volume: 0.5,
+      soundVolumes: {
+        deafen: 1,
+        message: 1,
+        mute: 1,
+        ringtoneIncoming: 1,
+        ringtoneOutgoing: 1,
+        streamEnd: 1,
+        streamStart: 1,
+        streamViewerJoin: 1,
+        streamViewerLeave: 1,
+        undeafen: 1,
+        unmute: 1,
+        userJoinVoice: 1,
+        userLeaveVoice: 1,
+        userSelfLeaveVoice: 1,
+        userMoved: 1,
+      },
     };
   }
 
@@ -141,14 +178,75 @@ export class Sounds extends AbstractStore<"sounds", TypeSounds> {
           ? input.userSelfLeaveVoice
           : true,
       userMoved: typeof input.userMoved === "boolean" ? input.userMoved : true,
+      volume:
+        typeof input.volume === "number"
+          ? Math.min(1, Math.max(0, input.volume))
+          : 0.5,
+      soundVolumes: this.cleanSoundVolumes(input.soundVolumes),
     };
   }
 
-  enabled(t: keyof TypeSounds): boolean {
+  /**
+   * Validate per-sound volume overrides, falling back to 1 (normal volume)
+   * for anything missing or invalid.
+   */
+  private cleanSoundVolumes(
+    input?: Partial<Record<ToggleableSound, number>>,
+  ): Record<ToggleableSound, number> {
+    const defaults = this.default().soundVolumes;
+    const result = { ...defaults };
+
+    for (const key of Object.keys(defaults) as ToggleableSound[]) {
+      const value = input?.[key];
+      if (typeof value === "number") {
+        result[key] = Math.min(1, Math.max(0, value));
+      }
+    }
+
+    return result;
+  }
+
+  enabled(t: ToggleableSound): boolean {
     return this.get()[t];
   }
 
-  toggle(t: keyof TypeSounds) {
+  toggle(t: ToggleableSound) {
     return this.set(t, !this.enabled(t));
+  }
+
+  /**
+   * Get the volume multiplier applied to all sound effects (0-1)
+   */
+  getVolume(): number {
+    return this.get().volume;
+  }
+
+  /**
+   * Set the volume multiplier applied to all sound effects (0-1)
+   */
+  setVolume(volume: number) {
+    this.set("volume", Math.min(1, Math.max(0, volume)));
+  }
+
+  /**
+   * Get the volume multiplier for a specific sound (0-1)
+   */
+  getSoundVolume(t: ToggleableSound): number {
+    return this.get().soundVolumes[t];
+  }
+
+  /**
+   * Set the volume multiplier for a specific sound (0-1)
+   */
+  setSoundVolume(t: ToggleableSound, volume: number) {
+    this.set("soundVolumes", t, Math.min(1, Math.max(0, volume)));
+  }
+
+  /**
+   * Reset every per-sound volume back to 100%. Does not affect the master
+   * `volume` multiplier.
+   */
+  resetSoundVolumes() {
+    this.set("soundVolumes", this.default().soundVolumes);
   }
 }
