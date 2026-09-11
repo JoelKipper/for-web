@@ -35,7 +35,7 @@ import { Theme } from "./stores/Theme";
 import { Voice } from "./stores/Voice";
 
 export { ALLOWED_IMAGE_TYPES } from "./stores/Draft";
-export type { Sounds, TypeSounds } from "./stores/Sounds";
+export type { Sounds, ToggleableSound, TypeSounds } from "./stores/Sounds";
 export { SyncWorker } from "./SyncWorker";
 
 /**

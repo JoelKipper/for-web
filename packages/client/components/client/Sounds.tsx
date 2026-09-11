@@ -1,6 +1,6 @@
 import { createContext, JSXElement, useContext } from "solid-js";
 
-import { Sounds, TypeSounds, useState } from "@revolt/state";
+import { Sounds, ToggleableSound, useState } from "@revolt/state";
 import deafenSound from "../../public/assets/sounds/deafen.ogg";
 import messageSound from "../../public/assets/sounds/message_sound.ogg";
 import muteSound from "../../public/assets/sounds/mute.ogg";
@@ -25,7 +25,7 @@ export class SoundController {
 
   node?: HTMLAudioElement;
 
-  lastPlayedSound?: keyof TypeSounds;
+  lastPlayedSound?: ToggleableSound;
 
   constructor(soundState: Sounds) {
     this.soundState = soundState;
@@ -50,7 +50,7 @@ export class SoundController {
    * @param newSound Sound to check for playability
    * @returns Whether the sound passed is playable currently
    */
-  canPlay(newSound: keyof TypeSounds): boolean {
+  canPlay(newSound: ToggleableSound): boolean {
     // Never let a sound turned off play
     if (!this.soundState.enabled(newSound)) {
       return false;
@@ -73,10 +73,17 @@ export class SoundController {
    * @param force Bypass canPlay check
    * @returns Whether the sound played
    */
-  playSound(sound: keyof TypeSounds, force?: boolean): boolean {
+  playSound(sound: ToggleableSound, force?: boolean): boolean {
     if (!force && !this.canPlay(sound)) {
       return false;
     }
+
+    // Stop any sound still playing from a previous call before starting the next one
+    if (this.node && !this.node.paused) {
+      this.node.pause();
+      this.node.currentTime = 0;
+    }
+
     switch (sound) {
       case "deafen": {
         this.node = new Audio(deafenSound);
@@ -140,6 +147,8 @@ export class SoundController {
       }
     }
     this.lastPlayedSound = sound;
+    this.node.volume =
+      this.soundState.getVolume() * this.soundState.getSoundVolume(sound);
     this.node.play();
     return true;
   }
