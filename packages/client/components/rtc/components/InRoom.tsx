@@ -12,6 +12,12 @@ export function InRoom(props: {
   channelId?: string;
   children: JSX.Element;
   fallback?: JSX.Element;
+  /**
+   * Also render while still connecting, not just once fully connected -
+   * for call surfaces that want to look already-joined immediately rather
+   * than waiting for the LiveKit handshake to finish.
+   */
+  includeConnecting?: boolean;
 }) {
   const room = useMaybeRoomContext();
   const voice = useVoice();
@@ -20,7 +26,9 @@ export function InRoom(props: {
     <Show
       when={
         room?.() &&
-        voice.state() === "CONNECTED" &&
+        (props.includeConnecting
+          ? voice.state() === "CONNECTED" || voice.state() === "CONNECTING"
+          : voice.state() === "CONNECTED") &&
         (!props.channelId || props.channelId === voice.channel()?.id)
       }
       fallback={props.fallback}

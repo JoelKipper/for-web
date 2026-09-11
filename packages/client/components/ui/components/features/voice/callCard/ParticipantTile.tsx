@@ -235,7 +235,7 @@ export const tile = cva({
   ],
 });
 
-const AvatarOnly = styled("div", {
+export const AvatarOnly = styled("div", {
   base: {
     gridArea: "1/1",
     display: "grid",
@@ -251,7 +251,7 @@ const AvatarOnly = styled("div", {
   },
 });
 
-const Overlay = styled("div", {
+export const Overlay = styled("div", {
   base: {
     minWidth: 0,
     gridArea: "1/1",
@@ -285,7 +285,7 @@ const Overlay = styled("div", {
   },
 });
 
-const OverlayInner = styled("div", {
+export const OverlayInner = styled("div", {
   base: {
     minWidth: 0,
 

@@ -11,6 +11,7 @@ import { Symbol } from "@revolt/ui/components/utils/Symbol";
 import { scrollableStyles } from "@revolt/ui/directives";
 
 import { ParticipantTile, tile } from "./ParticipantTile";
+import { SelfConnectingTile } from "./SelfConnectingTile";
 import { VoiceCallCardActions } from "./VoiceCallCardActions";
 import { VoiceCallCardStatus } from "./VoiceCallCardStatus";
 
@@ -135,7 +136,7 @@ function Participants() {
 
   return (
     <Call ref={callRef} class={voice.focusId() ? "" : scrollableStyles()}>
-      <InRoom>
+      <InRoom includeConnecting>
         <FocusedParticipant />
         <Show when={voice.focusId()}>
           <ShowBarButtonHolder>
@@ -167,6 +168,9 @@ function Participants() {
           class={voice.focusId() ? scrollableStyles({ direction: "x" }) : ""}
           style={{ "--vc-tile-width": tileWidth() }}
         >
+          <Show when={voice.state() === "CONNECTING"}>
+            <SelfConnectingTile />
+          </Show>
           <TrackLoop
             tracks={() => voice.vidTracks().filter((t) => !voice.isFocus(t))}
           >
