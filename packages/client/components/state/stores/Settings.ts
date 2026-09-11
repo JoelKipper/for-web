@@ -80,6 +80,12 @@ interface SettingsDefinition {
    * Whether to include admin panel links in context menus
    */
   "advanced:admin_panel": boolean;
+
+  /**
+   * Whether to automatically show the currently focused desktop app as
+   * your status (desktop app only, requires native support)
+   */
+  "desktop:activity_status": boolean;
 }
 
 /**
@@ -108,6 +114,7 @@ const EXPECTED_TYPES: { [K in keyof SettingsDefinition]: ValueType<K> } = {
   "appearance:compact_mode": "boolean",
   "advanced:copy_id": "boolean",
   "advanced:admin_panel": "boolean",
+  "desktop:activity_status": "boolean",
 };
 
 /**
@@ -151,6 +158,7 @@ export class Settings extends AbstractStore<"settings", TypeSettings> {
       "appearance:compact_mode": false,
       "advanced:copy_id": false,
       "advanced:admin_panel": false,
+      "desktop:activity_status": false,
     };
   }
 

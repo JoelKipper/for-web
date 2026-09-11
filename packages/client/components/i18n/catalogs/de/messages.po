@@ -386,7 +386,7 @@ msgstr "Alle Nachrichten"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsOverview.tsx
 msgid "All roles have overrides."
-msgstr ""
+msgstr "Alle Rollen haben Überschreibungen."
 
 #: components/ui/components/design/LoadingScreen.tsx
 msgid "All Systems Operational"
@@ -402,11 +402,11 @@ msgstr "Anderen erlauben deinen Bot über \"Entdecken\" zu ihren Servern hinzuzu
 
 #: components/app/interface/settings/user/bots/ViewBot.tsx
 msgid "Allow others to invite your bot"
-msgstr ""
+msgstr "Anderen erlauben, deinen Bot einzuladen"
 
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Allow others to join your server from Discover"
-msgstr ""
+msgstr "Anderen erlauben, deinem Server über \"Entdecken\" beizutreten"
 
 #: components/i18n/errors.tsx
 msgid "Already friends with this user."
@@ -595,7 +595,7 @@ msgstr "Kein passendes Gif gefunden? Besuche Gifbox und lade dein eigenes hoch f
 
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Can't get discover request status right now"
-msgstr ""
+msgstr "Der Status der Entdecken-Anfrage kann gerade nicht abgerufen werden"
 
 #: components/auth/src/flows/FlowLogin.tsx
 #: components/modal/modals/AddBot.tsx
@@ -630,7 +630,7 @@ msgstr "Abbrechen"
 
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Cancel discover request"
-msgstr ""
+msgstr "Entdecken-Anfrage abbrechen"
 
 #: components/app/menus/UserContextMenu.tsx
 msgid "Cancel friend request"
@@ -642,7 +642,7 @@ msgstr "Nachricht abbrechen"
 
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Cancel your discover request and remove it from the review queue"
-msgstr ""
+msgstr "Deine Entdecken-Anfrage abbrechen und aus der Prüfungswarteschlange entfernen"
 
 #: components/app/interface/settings/user/Account.tsx
 msgid "Cannot delete account until servers are deleted or transferred"
@@ -735,7 +735,7 @@ msgstr "Kanaleinstellungen"
 
 #: components/app/interface/settings/channel/Overview.tsx
 msgid "Channel Slowmode"
-msgstr ""
+msgstr "Kanal-Slowmode"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Channels"
@@ -748,7 +748,7 @@ msgstr "Chat-Eingabe"
 #. placeholder {0}: props.discoverable instanceof Bot ? "bot" : "server"
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Check back often to see if your {0} has been approved!"
-msgstr ""
+msgstr "Schau öfter vorbei, um zu sehen, ob dein {0} genehmigt wurde!"
 
 #: components/auth/src/flows/FlowCheck.tsx
 msgid "Check your mail!"
@@ -872,7 +872,7 @@ msgstr "Verbinden"
 #. placeholder {0}: props.discoverable instanceof Bot ? "bot" : "server"
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Contact support to remove this {0} from discover"
-msgstr ""
+msgstr "Kontaktiere den Support, um dieses {0} aus \"Entdecken\" zu entfernen"
 
 #: components/modal/modals/ReportContent.tsx
 msgid "Content breaks one or more laws"
@@ -921,7 +921,7 @@ msgstr "ID kopieren"
 
 #: components/app/interface/settings/server/invites/ListServerInvites.tsx
 msgid "Copy invite link"
-msgstr ""
+msgstr "Einladungslink kopieren"
 
 #: components/app/interface/settings/user/bots/ViewBot.tsx
 msgid "Copy Invite URL"
@@ -1095,7 +1095,7 @@ msgstr "Aktuelle Sitzung"
 
 #: components/app/interface/settings/server/roles/ServerRoleEditor.tsx
 msgid "Custom colour"
-msgstr ""
+msgstr "Benutzerdefinierte Farbe"
 
 #: components/modal/modals/CustomStatus.tsx
 msgid "Custom status"
@@ -1252,7 +1252,7 @@ msgstr "Discord RPC"
 #: components/app/interface/settings/ServerSettings.tsx
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Discover"
-msgstr ""
+msgstr "Entdecken"
 
 #: src/interface/Home.tsx
 msgid "Discover Stoat"
@@ -1268,7 +1268,7 @@ msgstr "Anzeigename"
 
 #: components/app/interface/settings/server/roles/ServerRoleEditor.tsx
 msgid "Display users with this role separately in the member list"
-msgstr ""
+msgstr "Nutzer mit dieser Rolle getrennt in der Mitgliederliste anzeigen"
 
 #: src/interface/navigation/servers/UserMenu.tsx
 msgid "Do Not Disturb"
@@ -1470,7 +1470,7 @@ msgstr "Gib deinen gewünschten Benutzernamen ein."
 #: components/app/interface/settings/server/roles/ServerRoleOverview.tsx
 #: components/app/interface/settings/ServerSettings.tsx
 msgid "Everyone"
-msgstr ""
+msgstr "Jeder"
 
 #: components/modal/modals/LinkWarning.tsx
 msgid "External links can be dangerous!"
@@ -1696,7 +1696,7 @@ msgstr "Hoher Kontrast"
 
 #: components/app/interface/settings/server/roles/ServerRoleEditor.tsx
 msgid "Hoist Role"
-msgstr ""
+msgstr "Rolle getrennt anzeigen"
 
 #: src/interface/Home.tsx
 #: src/interface/navigation/channels/HomeSidebar.tsx
@@ -1740,7 +1740,7 @@ msgstr "Eingehender Anruf"
 
 #: components/app/interface/settings/user/voice/VoiceInputOptions.tsx
 msgid "Input Volume"
-msgstr ""
+msgstr "Eingabelautstärke"
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Instead of closing, Stoat will hide in your tray."
@@ -2244,7 +2244,7 @@ msgstr "Noch keine Berechtigungen festgelegt"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsOverview.tsx
 msgid "No role overrides have been configured."
-msgstr ""
+msgstr "Es wurden keine Rollen-Überschreibungen konfiguriert."
 
 #: src/interface/Friends.tsx
 msgid "Nobody here right now!"
@@ -2404,11 +2404,11 @@ msgstr "Berechtigungen"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsOverview.tsx
 msgid "Permissions available when no role overrides apply"
-msgstr ""
+msgstr "Verfügbare Berechtigungen, wenn keine Rollen-Überschreibungen gelten"
 
 #: components/app/interface/settings/server/roles/ServerRoleOverview.tsx
 msgid "Permissions available without any role"
-msgstr ""
+msgstr "Verfügbare Berechtigungen ohne jegliche Rolle"
 
 #: components/modal/modals/ScreenSharePicker.tsx
 msgid "Pick a Screen to Share"
@@ -2469,7 +2469,7 @@ msgstr "Unterstützt von RNNoise"
 
 #: components/app/interface/settings/server/roles/ServerRoleEditor.tsx
 msgid "Preview"
-msgstr ""
+msgstr "Vorschau"
 
 #: components/app/interface/settings/UserSettings.tsx
 msgid "Privacy"
@@ -2543,12 +2543,12 @@ msgstr ""
 #. placeholder {0}: (dr.status as { Denied: string | null }) .Denied
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Reason: {0}"
-msgstr ""
+msgstr "Grund: {0}"
 
 #. placeholder {0}: (dr.status as { Removed: string | null }) .Removed
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Reason: {0} Contact support for more information."
-msgstr ""
+msgstr "Grund: {0} Kontaktiere den Support für weitere Informationen."
 
 #: components/app/interface/settings/user/notifications/Notifications.tsx
 msgid "Receive notifications while the app is open and in the background."
@@ -2718,7 +2718,7 @@ msgstr "Wiederherstellungscodes zurücksetzen"
 
 #: components/app/interface/settings/user/notifications/Sounds.tsx
 msgid "Reset sound volumes to 100%"
-msgstr ""
+msgstr "Sound-Lautstärken auf 100% zurücksetzen"
 
 #: components/app/interface/settings/user/bots/ViewBot.tsx
 msgid "Reset Token"
@@ -2751,7 +2751,7 @@ msgstr "Richtlinienänderungen überprüfen"
 
 #: components/app/interface/settings/server/roles/ServerRoleEditor.tsx
 msgid "Role Colour"
-msgstr ""
+msgstr "Rollenfarbe"
 
 #: components/app/interface/settings/server/roles/ServerRoleEditor.tsx
 msgid "Role Icon"
@@ -2764,7 +2764,7 @@ msgstr "Rollenname"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsOverview.tsx
 msgid "Role Overrides"
-msgstr ""
+msgstr "Rollen-Überschreibungen"
 
 #: components/app/interface/settings/ServerSettings.tsx
 #: components/ui/components/features/profiles/ProfileRoles.tsx
@@ -2773,7 +2773,7 @@ msgstr "Rollen"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsOverview.tsx
 msgid "Roles with No Overrides"
-msgstr ""
+msgstr "Rollen ohne Überschreibungen"
 
 #: components/app/interface/settings/channel/Overview.tsx
 #: components/app/interface/settings/channel/webhooks/ViewWebhook.tsx
@@ -2791,7 +2791,7 @@ msgstr "Datei speichern"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Save permissions"
-msgstr ""
+msgstr "Berechtigungen speichern"
 
 #: src/interface/channels/text/Composition.tsx
 msgid "Save to your notes"
@@ -2804,7 +2804,7 @@ msgstr "Gespeicherte Notizen"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Saving…"
-msgstr ""
+msgstr "Speichern…"
 
 #: components/modal/modals/ReportContent.tsx
 msgid "Scams or fraud"
@@ -2850,7 +2850,7 @@ msgstr "Mitglieder zum Hinzufügen auswählen"
 
 #: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
 msgid "Select noise suppression"
-msgstr ""
+msgstr "Rauschunterdrückung auswählen"
 
 #: components/app/interface/settings/user/voice/ScreenShareOptions.tsx
 msgid "Select screen share quality"
@@ -2960,7 +2960,7 @@ msgstr "Sitzungen"
 
 #: components/app/interface/settings/server/roles/ServerRoleEditor.tsx
 msgid "Set role colour to {colour}"
-msgstr ""
+msgstr "Rollenfarbe auf {colour} setzen"
 
 #: components/modal/modals/CustomStatus.tsx
 msgid "Set your status"
@@ -3029,7 +3029,7 @@ msgstr ""
 
 #: components/app/interface/settings/channel/Overview.tsx
 msgid "Slowmode off"
-msgstr ""
+msgstr "Slowmode aus"
 
 #: components/modal/modals/EditEmail.tsx
 msgid "someone@example.com"
@@ -3050,7 +3050,7 @@ msgstr "Etwas ist schief gelaufen! {error}"
 
 #: components/app/interface/settings/user/notifications/Sounds.tsx
 msgid "Sound Volume"
-msgstr ""
+msgstr "Sound-Lautstärke"
 
 #: components/app/interface/settings/user/notifications/Sounds.tsx
 msgid "Sounds"
@@ -3082,7 +3082,7 @@ msgstr ""
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Start Minimised to Tray"
-msgstr ""
+msgstr "Minimiert im Tray starten"
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardPreview.tsx
 msgid "Start the call"
@@ -3114,11 +3114,11 @@ msgstr "Stoat ist einer der besten Wege um mit deinen Freunden und deiner Commun
 
 #: components/app/interface/settings/server/roles/ServerRoleEditor.tsx
 msgid "Stoat rocks!"
-msgstr ""
+msgstr "Stoat rockt!"
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Stoat will start in the system tray."
-msgstr ""
+msgstr "Stoat startet im System-Tray."
 
 #: src/AndroidNag.tsx
 msgid "Stoat works best as an app"
@@ -3264,7 +3264,7 @@ msgstr "Thema"
 #. placeholder {0}: props.discoverable instanceof Bot ? "bot" : "server"
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "This {0} is discoverable"
-msgstr ""
+msgstr "Dieser {0} ist auffindbar"
 
 #: components/i18n/errors.tsx
 msgid "This account is not activated! Please check your account's inbox and try again."
@@ -3361,7 +3361,7 @@ msgstr "Dadurch wird der aktuelle Token ungültig und alle bestehenden Instanzen
 
 #: components/app/interface/settings/user/Language.tsx
 msgid "Time format"
-msgstr ""
+msgstr "Zeitformat"
 
 #. placeholder {0}: props.member!.timeout!.toLocaleString()
 #: src/interface/channels/text/MemberSidebar.tsx
@@ -3392,7 +3392,7 @@ msgstr "Hauptseitenleiste umschalten"
 
 #: components/app/interface/settings/user/bots/ViewBot.tsx
 msgid "Token copied to clipboard"
-msgstr ""
+msgstr "Token in die Zwischenablage kopiert"
 
 #: components/app/interface/settings/user/appearance/AppearanceMenu.tsx
 msgid "Tonal Spot"
@@ -3622,7 +3622,7 @@ msgstr "Sprechen"
 
 #: components/app/interface/settings/UserSettings.tsx
 msgid "Voice & Video"
-msgstr ""
+msgstr "Sprache & Video"
 
 #: components/modal/modals/CreateChannel.tsx
 msgid "Voice Channel"
@@ -3674,11 +3674,11 @@ msgstr "Willkommen!"
 
 #: components/modal/modals/Changelog.tsx
 msgid "What's new"
-msgstr ""
+msgstr "Was ist neu"
 
 #: components/app/interface/settings/UserSettings.tsx
 msgid "What's New"
-msgstr ""
+msgstr "Was ist neu"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Whether other users can edit these settings"
@@ -3749,7 +3749,7 @@ msgstr "Hier kannst du Probleme melden und Vorschläge einbringen."
 
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "You can request again below"
-msgstr ""
+msgstr "Du kannst unten erneut anfragen"
 
 #. placeholder {0}: err.max
 #: components/i18n/errors.tsx
@@ -3877,7 +3877,7 @@ msgstr "Du hast zu viele Freundschaftsanfragen verschickt, das Maximum ist {0}"
 #. placeholder {0}: props.discoverable instanceof Bot ? "bot" : "server"
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Your {0} is under review"
-msgstr ""
+msgstr "Dein {0} wird überprüft"
 
 #: components/app/interface/settings/user/Account.tsx
 msgid "Your account and all of your data (including your messages and friends list) will be queued for deletion. A confirmation email will be sent - you can cancel this within 7 days by contacting support."
@@ -3889,11 +3889,11 @@ msgstr "Dein Konto wurde verifiziert!"
 
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Your discover request has been denied"
-msgstr ""
+msgstr "Deine Entdecken-Anfrage wurde abgelehnt"
 
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Your discover request has been removed"
-msgstr ""
+msgstr "Deine Entdecken-Anfrage wurde entfernt"
 
 #: components/i18n/errors.tsx
 msgid "Your discriminator change has been ratelimited, please try again later."
