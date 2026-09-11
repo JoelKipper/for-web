@@ -42,6 +42,13 @@ declare global {
       ): void;
       screenPickerCallback(idx: number, audio: boolean): void;
       isWayland?(): boolean;
+
+      /**
+       * Get the name of the application currently focused on the desktop,
+       * for use as an automatic "Playing X" status. Not implemented by
+       * every build of the desktop app — always feature-detect before use.
+       */
+      getActiveWindow?(): Promise<string | undefined>;
     };
 
     desktopConfig: {
