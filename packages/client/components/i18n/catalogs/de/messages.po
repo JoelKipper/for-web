@@ -1736,7 +1736,7 @@ msgstr "Installiere in der Zwischenzeit Stoat auf Google Play für eine schnelle
 
 #: components/app/interface/settings/user/notifications/Sounds.tsx
 msgid "Incoming Call"
-msgstr ""
+msgstr "Eingehender Anruf"
 
 #: components/app/interface/settings/user/voice/VoiceInputOptions.tsx
 msgid "Input Volume"
@@ -2433,7 +2433,7 @@ msgstr "Plattformmoderator"
 
 #: components/app/interface/settings/user/notifications/Sounds.tsx
 msgid "Play sound"
-msgstr ""
+msgstr "Sound abspielen"
 
 #: components/modal/modals/MFAFlow.tsx
 msgid "Please confirm this action using the selected method."
@@ -3134,11 +3134,11 @@ msgstr ""
 
 #: components/app/interface/settings/user/notifications/Sounds.tsx
 msgid "Stream End"
-msgstr ""
+msgstr "Stream-Ende"
 
 #: components/app/interface/settings/user/notifications/Sounds.tsx
 msgid "Stream Start"
-msgstr ""
+msgstr "Stream-Start"
 
 #: components/app/interface/settings/user/Feedback.tsx
 msgid "Submit feature suggestion"
@@ -3813,7 +3813,7 @@ msgstr "Du hast diesen Nutzer blockiert."
 
 #: components/app/interface/settings/user/notifications/Sounds.tsx
 msgid "You Left Call"
-msgstr ""
+msgstr "Du hast den Sprachkanal verlassen"
 
 #: components/ui/components/design/LoadingScreen.tsx
 msgid "You may be experiencing connection issues."
