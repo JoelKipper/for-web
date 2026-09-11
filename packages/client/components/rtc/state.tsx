@@ -100,6 +100,15 @@ class Voice {
   private screenShareTracks: Set<string>;
   private voiceProcessor?: VoiceProcessor;
 
+  /**
+   * Bumped by every connect()/disconnect() call. An in-flight connect()
+   * checks this after each await and abandons the connection if it no
+   * longer matches - otherwise a disconnect() (or a newer connect()) that
+   * happens mid-handshake can leave the LiveKit session alive on the
+   * server while the UI already thinks the call was left.
+   */
+  #connectionGeneration = 0;
+
   constructor(
     voiceSettings: VoiceSettings,
     modals: ModalController,
@@ -210,6 +219,9 @@ class Voice {
   async connect(channel: Channel, auth?: { url: string; token: string }) {
     this.disconnect();
 
+    const generation = ++this.#connectionGeneration;
+    const stillCurrent = () => generation === this.#connectionGeneration;
+
     this.device.setWakeLocked();
 
     const room = new Room({
@@ -311,25 +323,47 @@ class Voice {
       }
     });
 
-    // Gather latency
-    const selected = await Promise.any(
-      this.config.features.livekit.nodes.map(async (node) => {
-        return fetch(node.public_url.replace("wss", "https")).then(() => {
-          return node.name;
-        });
-      }),
-    );
+    // Pick the closest LiveKit node by latency - skip the race entirely
+    // when there's only one node (e.g. every self-hosted instance), since
+    // there's nothing to choose between and the probe is pure added delay.
+    const nodes = this.config.features.livekit.nodes;
+    const selected =
+      nodes.length === 1
+        ? nodes[0].name
+        : await Promise.any(
+            nodes.map(async (node) => {
+              return fetch(node.public_url.replace("wss", "https")).then(() => {
+                return node.name;
+              });
+            }),
+          );
+
+    if (!stillCurrent()) return this.abandon(room);
 
     if (!auth) {
       auth = await channel.joinCall(selected);
     }
 
+    if (!stillCurrent()) return this.abandon(room);
+
     await room.connect(auth.url, auth.token, {
       autoSubscribe: false,
     });
+
+    if (!stillCurrent()) return this.abandon(room);
+  }
+
+  /**
+   * Tear down a room that finished connecting after the call was already
+   * left (or superseded by a newer connect()) - see #connectionGeneration.
+   */
+  private abandon(room: Room) {
+    room.removeAllListeners();
+    room.disconnect();
   }
 
   disconnect() {
+    this.#connectionGeneration++;
     this.device.releaseWakeLock();
     try {
       const room = this.room();
