@@ -34,7 +34,16 @@ export default defineConfig({
     addFontPreload(),
     VitePWA({
       srcDir: "src",
-      registerType: "autoUpdate",
+      // "prompt" (not "autoUpdate"): with a custom injectManifest service
+      // worker, vite-plugin-pwa never auto-injects skipWaiting/clientsClaim.
+      // "autoUpdate"'s generated register script relies on the SW activating
+      // on its own and never sends it a SKIP_WAITING message, so with our
+      // serviceWorker.ts (which only skips waiting on that message) updates
+      // silently got stuck "waiting" forever. "prompt" mode calls
+      // messageSkipWaiting() itself, which our SW already listens for, and
+      // is what src/serviceWorkerInterface.ts's onNeedRefresh/updateSW(true)
+      // API assumes.
+      registerType: "prompt",
       filename: "serviceWorker.ts",
       strategies: "injectManifest",
       injectManifest: {
