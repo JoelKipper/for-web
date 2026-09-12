@@ -172,7 +172,19 @@ function Participants() {
             <SelfConnectingTile />
           </Show>
           <TrackLoop
-            tracks={() => voice.vidTracks().filter((t) => !voice.isFocus(t))}
+            tracks={() =>
+              voice
+                .vidTracks()
+                .filter(
+                  (t) =>
+                    !voice.isFocus(t) &&
+                    // LiveKit creates the local participant with identity ""
+                    // until the connect handshake resolves - filter that
+                    // stand-in out (SelfConnectingTile covers it visually)
+                    // so it doesn't briefly render as a real "Unknown User".
+                    t.participant.identity !== "",
+                )
+            }
           >
             {() => <ParticipantTile />}
           </TrackLoop>
