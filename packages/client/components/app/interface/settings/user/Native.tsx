@@ -1,7 +1,8 @@
-import { createSignal, onMount } from "solid-js";
+import { Show, createSignal, onMount } from "solid-js";
 
 import { Trans, useLingui } from "@lingui/solid/macro";
 
+import { useState } from "@revolt/state";
 import { CategoryButton, Checkbox, Column } from "@revolt/ui";
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
@@ -65,6 +66,7 @@ declare global {
  */
 export default function Native() {
   const { t } = useLingui();
+  const { settings } = useState();
   const [autostart, setAutostart] = createSignal(false);
   const [config, setConfig] = createSignal(window.desktopConfig.get());
 
@@ -148,6 +150,30 @@ export default function Native() {
       </CategoryButton.Group>
 
       <CategoryButton.Group>
+        <Show when={window.native?.getActiveWindow}>
+          <CategoryButton
+            action={
+              <Checkbox
+                checked={settings.getValue("desktop:activity_status")}
+              />
+            }
+            onClick={() =>
+              settings.setValue(
+                "desktop:activity_status",
+                !settings.getValue("desktop:activity_status"),
+              )
+            }
+            icon={<Symbol>sports_esports</Symbol>}
+            description={
+              <Trans>
+                Automatically show the app you're currently using as your
+                status.
+              </Trans>
+            }
+          >
+            <Trans>Show Current Activity</Trans>
+          </CategoryButton>
+        </Show>
         {CheckboxButton(
           "discordRpc",
           "groups_2",
