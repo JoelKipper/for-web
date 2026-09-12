@@ -2,6 +2,7 @@ import { useLingui } from "@lingui/solid/macro";
 import { useBeforeLeave, useNavigate, useParams } from "@solidjs/router";
 import {
   createContext,
+  createEffect,
   createMemo,
   createSignal,
   JSXElement,
@@ -13,6 +14,8 @@ import { Dynamic } from "solid-js/web";
 import { CONFIGURATION } from "@revolt/common";
 import { AppConfig, normalizeHost, STOAT_HOST } from "@revolt/common/lib/env";
 import { LoadingScreen, useSnackbar } from "@revolt/ui";
+
+import { pendingUpdate } from "../../src/serviceWorkerInterface";
 
 import Instance, { _newClient } from "./Instance";
 
@@ -49,6 +52,21 @@ export function InstanceContext(props: { children?: JSXElement }) {
     });
     if (appLoadedOnce) nav(-1);
   }
+
+  // Surface the service worker's update signal here so it shows on every
+  // platform, not just the desktop titlebar (which is hidden in-browser).
+  createEffect(() => {
+    const update = pendingUpdate();
+    if (!update) return;
+    snackbar.show({
+      message: t`A new version is available.`,
+      action: t`Reload`,
+      placement: "bottom",
+      closeable: true,
+      closeOnAction: true,
+      onAction: update,
+    });
+  });
 
   (async () => {
     //Redirect default instance
