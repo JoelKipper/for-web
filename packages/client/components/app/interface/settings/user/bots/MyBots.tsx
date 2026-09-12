@@ -10,9 +10,12 @@ import {
   CategoryButton,
   CircularProgress,
   Column,
+  IconButton,
   iconSize,
 } from "@revolt/ui";
+import { useNavigate } from "@solidjs/router";
 
+import MdChat from "@material-design-icons/svg/outlined/chat.svg?component-solid";
 import MdLibraryBooks from "@material-design-icons/svg/outlined/library_books.svg?component-solid";
 import MdSmartToy from "@material-design-icons/svg/outlined/smart_toy.svg?component-solid";
 
@@ -79,7 +82,16 @@ function CreateBot() {
  */
 function ListBots() {
   const { navigate } = useSettingsNavigation();
+  const appNavigate = useNavigate();
+  const { pop } = useModals();
   const bots = createOwnBotsResource();
+
+  function messageBot(bot: NonNullable<typeof bots.data>[number]) {
+    bot.user!.openDM().then((channel) => {
+      appNavigate(channel.path);
+      pop();
+    });
+  }
 
   return (
     <ErrorBoundary fallback="Failed to load bots...">
@@ -96,7 +108,17 @@ function ListBots() {
                   />
                 }
                 onClick={() => navigate(`bots/${bot.id}`)}
-                action="chevron"
+                action={[
+                  <span onClick={(e) => e.stopPropagation()}>
+                    <IconButton
+                      aria-label="Message"
+                      onPress={() => messageBot(bot)}
+                    >
+                      <MdChat {...iconSize(18)} />
+                    </IconButton>
+                  </span>,
+                  "chevron",
+                ]}
                 // description={bot.id}
               >
                 {bot.user!.displayName}
