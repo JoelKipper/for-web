@@ -83,14 +83,17 @@ function CreateBot() {
 function ListBots() {
   const { navigate } = useSettingsNavigation();
   const appNavigate = useNavigate();
-  const { pop } = useModals();
+  const { pop, showError } = useModals();
   const bots = createOwnBotsResource();
 
   function messageBot(bot: NonNullable<typeof bots.data>[number]) {
-    bot.user!.openDM().then((channel) => {
-      appNavigate(channel.path);
-      pop();
-    });
+    bot
+      .user!.openDM()
+      .then((channel) => {
+        appNavigate(channel.path);
+        pop();
+      })
+      .catch(showError);
   }
 
   return (
