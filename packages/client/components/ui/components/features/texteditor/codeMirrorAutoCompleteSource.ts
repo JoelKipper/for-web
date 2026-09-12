@@ -29,11 +29,60 @@ const MAPPED_EMOJI_KEYS = EMOJI_KEYS.map(
     }) as Completion,
 );
 
-const RE_match = /(?<!\w)[:@%#]\w*/;
+const RE_match = /(?<!\w)[:@%#!]\w*/;
 const RE_emojiValidFor = /(?<!\w):\w*/;
 const RE_mentionValidFor = /(?<!\w)@\w*/;
 const RE_roleValidFor = /(?<!\w)@\w*/;
 const RE_channelValidFor = /(?<!\w)#\w*/;
+const RE_commandValidFor = /(?<!\w)!\w*/;
+
+// Static list of AdolfBot's `!`-prefixed commands (see StoatBot/bot.js HELP_TEXT).
+// Stoat has no bot command registration API to source this from dynamically.
+const BOT_COMMANDS: Completion[] = [
+  {
+    type: "command",
+    label: "!dice",
+    detail: "[NdM] – würfeln, z.B. !dice 2d6",
+    apply: "!dice ",
+  },
+  { type: "command", label: "!flip", detail: "Münze werfen", apply: "!flip " },
+  {
+    type: "command",
+    label: "!8ball",
+    detail: "<Frage> – die Kugel weiß es",
+    apply: "!8ball ",
+  },
+  {
+    type: "command",
+    label: "!remind",
+    detail: "<Minuten> <Text> – Erinnerung in diesem Kanal",
+    apply: "!remind ",
+  },
+  {
+    type: "command",
+    label: "!poll",
+    detail: "<Frage> | <Option1> | <Option2> | ... – Umfrage",
+    apply: "!poll ",
+  },
+  {
+    type: "command",
+    label: "!ai",
+    detail: "<Text> – mit dem lokalen KI-Modell chatten",
+    apply: "!ai ",
+  },
+  {
+    type: "command",
+    label: "!redeploy",
+    detail: "for-web neu deployen (nur Owner)",
+    apply: "!redeploy ",
+  },
+  {
+    type: "command",
+    label: "!help",
+    detail: "Befehlsliste anzeigen",
+    apply: "!help ",
+  },
+];
 
 export function codeMirrorAutoCompleteSource(
   searchSpace: Accessor<AutoCompleteSearchSpace>,
@@ -149,6 +198,12 @@ export function codeMirrorAutoCompleteSource(
           from: token.from,
           options: channels(),
           validFor: RE_channelValidFor,
+        } as CompletionResult;
+      case "!":
+        return {
+          from: token.from,
+          options: BOT_COMMANDS,
+          validFor: RE_commandValidFor,
         } as CompletionResult;
       default:
         return null;
