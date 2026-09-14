@@ -28,6 +28,12 @@ const MainBar = styled("div", {
       position: "absolute",
       width: "100vw",
       height: "100%",
+      // Establishes its own stacking context so UserPanel's zIndex:5 stays
+      // contained here instead of competing directly with Content's
+      // runtime zIndex:1 (SlideDrawer.ts) - without this, UserPanel always
+      // painted above the chat, even while the chat pane was the one meant
+      // to be showing.
+      zIndex: 0,
     },
   },
 });
