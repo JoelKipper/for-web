@@ -21,6 +21,13 @@ export class VoiceProcessor implements TrackProcessor<
   // (hysteresis) to avoid rapid chatter right at the boundary; a slow
   // release gives a brief hangover after speech ends instead of cutting off
   // mid-word.
+  //
+  // The analyser taps the raw source (see updateNoiseSuppression), not the
+  // post-RNNoise signal: enhanced noise suppression can attenuate a speech
+  // segment well below the gate threshold on its own, which would permanently
+  // close the gate for anyone whose voice/mic ends up quieter after RNNoise -
+  // gating on raw input level keeps "am I speaking" independent of how much
+  // a downstream processor happens to attenuate the signal.
   private static readonly GATE_HYSTERESIS_DB = 7;
   private static readonly GATE_ATTACK_SECONDS = 0.03;
   private static readonly GATE_RELEASE_SECONDS = 0.15;
@@ -155,8 +162,12 @@ export class VoiceProcessor implements TrackProcessor<
       this.preGateOutput = this.sourceNode;
     }
 
+    // Always measure the raw source for the gate decision (see comment on
+    // GATE_HYSTERESIS_DB above) - preGateOutput is still what actually
+    // reaches gateGainNode, so noise suppression still applies to the
+    // published audio, it just no longer affects whether the gate opens.
     this.gateAnalyserNode?.disconnect();
-    this.preGateOutput!.connect(this.gateAnalyserNode!);
+    this.sourceNode!.connect(this.gateAnalyserNode!);
   }
 
   private async build(opts: AudioProcessorOptions): Promise<void> {
