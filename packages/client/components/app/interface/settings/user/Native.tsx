@@ -41,7 +41,11 @@ declare global {
           }[],
         ) => void,
       ): void;
-      screenPickerCallback(idx: number, audio: boolean): void;
+      screenPickerCallback(
+        idx: number,
+        audio: boolean,
+        trackActiveWindow?: boolean,
+      ): void;
       isWayland?(): boolean;
 
       /**
@@ -50,6 +54,18 @@ declare global {
        * every build of the desktop app — always feature-detect before use.
        */
       getActiveWindow?(): Promise<string | undefined>;
+
+      /**
+       * Opt into "track active window" screen sharing: after picking this
+       * mode in the screen share picker, the desktop app should call the
+       * provided callback with a new `desktopCapturer` source id every
+       * time the focused window changes, so we can swap the live screen
+       * share track to follow it. Not implemented by every build of the
+       * desktop app — always feature-detect before use.
+       */
+      onActiveWindowTrackSwitch?(
+        callback: (sourceId: string) => void,
+      ): () => void;
     };
 
     desktopConfig: {

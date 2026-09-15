@@ -5,7 +5,7 @@ import { useState } from "@revolt/state";
 import { ScreenShareQualityName } from "@revolt/state/stores/Voice";
 import { Avatar, Column, Dialog, DialogProps, Form2, Ripple } from "@revolt/ui";
 
-import { createMemo } from "solid-js";
+import { Show, createMemo } from "solid-js";
 import { styled } from "styled-system/jsx";
 import { Modals } from "../types";
 
@@ -21,6 +21,7 @@ export function ScreenSharePickerModal(
     ),
     audio: createFormControl(voice.screenShareAudio),
     idx: createFormControl([0], { required: true }),
+    trackActiveWindow: createFormControl(false),
   });
 
   async function onSubmit() {
@@ -28,6 +29,7 @@ export function ScreenSharePickerModal(
       group.controls.idx.value[0],
       group.controls.qualityName.value,
       group.controls.audio.value,
+      group.controls.trackActiveWindow.value,
     );
     props.onClose();
   }
@@ -82,6 +84,11 @@ export function ScreenSharePickerModal(
               </Item>
             )}
           </Form2.VirtualSelect>
+          <Show when={props.canTrackActiveWindow}>
+            <Form2.Checkbox control={group.controls.trackActiveWindow}>
+              <Trans>Automatically follow whichever window is focused</Trans>
+            </Form2.Checkbox>
+          </Show>
           <Form2.ButtonGroup
             control={group.controls.qualityName}
             buttonDefinitions={props.qualities.map((quality) => {

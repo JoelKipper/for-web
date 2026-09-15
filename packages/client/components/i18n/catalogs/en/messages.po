@@ -323,6 +323,10 @@ msgstr "24 hours"
 #~ msgid "7 days"
 #~ msgstr "7 days"
 
+#: components/instance/index.tsx
+msgid "A new version is available."
+msgstr "A new version is available."
+
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Able to access channels on this server"
 msgstr "Able to access channels on this server"
@@ -511,6 +515,14 @@ msgstr "Authenticator App"
 #: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
 msgid "Automatic Gain Control"
 msgstr "Automatic Gain Control"
+
+#: components/modal/modals/ScreenSharePicker.tsx
+msgid "Automatically follow whichever window is focused"
+msgstr "Automatically follow whichever window is focused"
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Automatically show the app you're currently using as your status."
+msgstr "Automatically show the app you're currently using as your status."
 
 #: components/app/interface/settings/user/profile/UserProfileEditor.tsx
 msgid "Avatar"
@@ -2497,6 +2509,10 @@ msgstr "Platform Moderator"
 msgid "Play sound"
 msgstr "Play sound"
 
+#: components/client/ActivityStatus.tsx
+msgid "Playing {app}"
+msgstr "Playing {app}"
+
 #: components/modal/modals/MFAFlow.tsx
 msgid "Please confirm this action using the selected method."
 msgstr "Please confirm this action using the selected method."
@@ -2659,6 +2675,10 @@ msgstr "Reject friend request"
 #: src/interface/channels/text/TextSearchSidebar.tsx
 msgid "Relevance"
 msgstr "Relevance"
+
+#: components/instance/index.tsx
+msgid "Reload"
+msgstr "Reload"
 
 #: components/markdown/plugins/anchors.tsx
 msgid "Remote Channel"
@@ -3072,6 +3092,10 @@ msgstr "Share screen"
 #: components/app/interface/settings/user/Native.tsx
 msgid "Show corrections and suggestions as you type."
 msgstr "Show corrections and suggestions as you type."
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Show Current Activity"
+msgstr "Show Current Activity"
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardActiveRoom.tsx
 msgid "Show Others"
