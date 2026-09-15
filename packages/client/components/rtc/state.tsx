@@ -244,6 +244,10 @@ class Voice {
         videoEncoding: VideoPresets.h720.encoding,
         screenShareEncoding: ScreenSharePresets.h720fps30.encoding,
       },
+      // Lets LiveKit pause simulcast layers nobody is actually subscribed
+      // to instead of encoding them continuously - frees up encoder CPU
+      // that otherwise competes with the layer people actually watch.
+      dynacast: true,
     });
 
     this.vidTracks = useTracks(
@@ -592,7 +596,20 @@ class Voice {
               restrictOwnAudio: true,
             },
           },
-          { screenShareEncoding: chosenQuality?.encoding },
+          {
+            screenShareEncoding: chosenQuality?.encoding,
+            // Simulcast makes the encoder continuously produce an extra
+            // lower-res layer alongside the real one - pure encoder CPU
+            // overhead screen share to a small self-hosted instance
+            // doesn't need. VP8 (the room-wide default codec, tuned for
+            // camera video) is software-only in effectively every
+            // browser; H.264 is usually hardware-accelerated, which is
+            // what actually makes sustained 1080p60 achievable. Codec and
+            // simulcast are fixed at publish time (can't be changed by
+            // the quality-switch codepath below), so set both here.
+            simulcast: false,
+            videoCodec: "h264",
+          },
         );
 
         const screenAudioTrack = room.localParticipant.getTrackPublication(
