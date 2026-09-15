@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.16.0](https://github.com/JoelKipper/for-web/compare/stoat-for-web-v0.15.3...stoat-for-web-v0.16.0) (2026-09-15)
+
+
+### Features
+
+* add Discord-style account bar to the sidebar ([0617f2b](https://github.com/JoelKipper/for-web/commit/0617f2bc33412c62380968ca9b27d954579e60ea))
+* Add discover buttons and flow for bots and servers ([#1572](https://github.com/JoelKipper/for-web/issues/1572)) ([fbba89e](https://github.com/JoelKipper/for-web/commit/fbba89e68977ff60ed911fef401723914d9bbf3c))
+* add public bot toggle to bot editor ([#1482](https://github.com/JoelKipper/for-web/issues/1482)) ([2c5bcb4](https://github.com/JoelKipper/for-web/commit/2c5bcb4108eaaf9745a91ab8f3f16cc6a4b0037f))
+* add timeout to member context menu ([#1384](https://github.com/JoelKipper/for-web/issues/1384)) ([ca0dc59](https://github.com/JoelKipper/for-web/commit/ca0dc59917fcfbcd1e152e5737d9c7227eee5172))
+* Call layout v2.0 ([#1555](https://github.com/JoelKipper/for-web/issues/1555)) ([e507617](https://github.com/JoelKipper/for-web/commit/e50761785bf50a9b7cb829c40d33c06acee09256))
+* gate outgoing mic on voice activity with adjustable sensitivity ([de4a0a9](https://github.com/JoelKipper/for-web/commit/de4a0a99aeea80210f47241207eca5b5ee613dfb))
+* let friends be invited to a server from their context menu ([c91740a](https://github.com/JoelKipper/for-web/commit/c91740a8b8be30c7712911132d0b66d96629877f))
+* sharper screen share quality + 1080p60 option ([b7e9fd3](https://github.com/JoelKipper/for-web/commit/b7e9fd3a0920b4d036e98ead67e8e5f1888698be))
+* show embed icon for user/bot embeds (if present) ([#1494](https://github.com/JoelKipper/for-web/issues/1494)) ([1f49fd8](https://github.com/JoelKipper/for-web/commit/1f49fd8dadb68ac2ae35ae7321466157a9babd06))
+* show embed icon for user/bot embeds (if present) ([#1494](https://github.com/JoelKipper/for-web/issues/1494)) ([3450d2a](https://github.com/JoelKipper/for-web/commit/3450d2a2eb1acc6fb775e290c73e18595d77eb54))
+* show embed icon for user/bot embeds (if present) ([#1494](https://github.com/JoelKipper/for-web/issues/1494)) ([919baec](https://github.com/JoelKipper/for-web/commit/919baec99d627544747c99916f426110aae7493e))
+
+
+### Bug Fixes
+
+* Allow re-viewing existing invite codes ([#1488](https://github.com/JoelKipper/for-web/issues/1488)) ([1677503](https://github.com/JoelKipper/for-web/commit/1677503619e62ac298c5b1b3b20855d1f32c216a))
+* clicking a member again re-opens their card instead of closing it ([fddd30f](https://github.com/JoelKipper/for-web/commit/fddd30ffadedc7373cf655cb503fc493a511a392))
+* Don't allow message prefix to overflow to prevent bounce on sending ([#1598](https://github.com/JoelKipper/for-web/issues/1598)) ([04afce2](https://github.com/JoelKipper/for-web/commit/04afce2b5ec4a8da0d91255fdbaabf753057e311))
+* guard against bot.user being undefined in delete confirmation dialog ([#1567](https://github.com/JoelKipper/for-web/issues/1567)) ([2071036](https://github.com/JoelKipper/for-web/commit/2071036d4c5765b9afaf4ac588dab3156d92343b)), closes [#1508](https://github.com/JoelKipper/for-web/issues/1508)
+* keep the channel list from jumping to the top ([#1583](https://github.com/JoelKipper/for-web/issues/1583)) ([4b18d9e](https://github.com/JoelKipper/for-web/commit/4b18d9e77790cef725111aa8cd5aaad63aba1b52))
+* Make scrolling between channels more consistent ([#1599](https://github.com/JoelKipper/for-web/issues/1599)) ([8ea8992](https://github.com/JoelKipper/for-web/commit/8ea89922104e49dbf27a5258c785444eb18cfa8b))
+* Visual padding issues ([#1558](https://github.com/JoelKipper/for-web/issues/1558)) ([b8cf336](https://github.com/JoelKipper/for-web/commit/b8cf336b3ef754477328533798770ae337e2e69f))
+* website embed title overflowing card, double icon on embed ([#1575](https://github.com/JoelKipper/for-web/issues/1575)) ([6664cb2](https://github.com/JoelKipper/for-web/commit/6664cb2e81b19cb89942e97e88ec03139253d7a6))
+
 ## [0.15.3](https://github.com/stoatchat/for-web/compare/stoat-for-web-v0.15.2...stoat-for-web-v0.15.3) (2026-08-28)
 
 
