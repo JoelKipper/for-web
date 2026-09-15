@@ -633,6 +633,19 @@ class Voice {
                 },
                 quality.encoding,
               );
+              // LiveKit defaults every screen-share track's encoder to
+              // "maintain-resolution" regardless of the chosen preset, so
+              // under CPU/bandwidth pressure it drops frames before ever
+              // dropping resolution - silently capping the actual framerate
+              // of "high60" well below the requested 60fps. Match the
+              // encoder's priority to what the contentHint already implies:
+              // "motion" presets (low/high/high60) want smooth motion, only
+              // "text" genuinely wants to keep resolution over framerate.
+              await localTrack.videoTrack.setDegradationPreference(
+                quality.contentHint === "motion"
+                  ? "maintain-framerate"
+                  : "maintain-resolution",
+              );
               if (!audio && screenAudioTrack?.track) {
                 room.localParticipant.unpublishTrack(screenAudioTrack.track);
               }
