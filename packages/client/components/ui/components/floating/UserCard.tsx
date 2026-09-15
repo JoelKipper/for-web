@@ -91,11 +91,7 @@ export function UserCard(
         </TopArea>
 
         <Stack>
-          <Profile.Bio
-            content={query.data?.content}
-            onClick={openFull}
-            fluid
-          />
+          <Profile.Bio content={query.data?.content} onClick={openFull} fluid />
           <Profile.Roles member={props.member} fluid />
           <Profile.Badges user={props.user} fluid />
           <Show when={props.bot}>

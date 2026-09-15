@@ -43,9 +43,7 @@ export function ProfileRoles(props: {
                   : undefined,
               }}
             />
-            <Role style={{ color: role.colour || undefined }}>
-              {role.name}
-            </Role>
+            <Role style={{ color: role.colour || undefined }}>{role.name}</Role>
           </RolePill>
         )}
       </For>
