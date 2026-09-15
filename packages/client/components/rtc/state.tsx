@@ -245,6 +245,10 @@ class Voice {
         videoEncoding: VideoPresets.h720.encoding,
         screenShareEncoding: ScreenSharePresets.h720fps30.encoding,
       },
+      // Lets LiveKit pause simulcast layers nobody is actually subscribed
+      // to instead of encoding them continuously - frees up encoder CPU
+      // that otherwise competes with the layer people actually watch.
+      dynacast: true,
     });
 
     this.vidTracks = useTracks(
@@ -600,7 +604,20 @@ class Voice {
               restrictOwnAudio: true,
             },
           },
-          { screenShareEncoding: chosenQuality?.encoding },
+          {
+            screenShareEncoding: chosenQuality?.encoding,
+            // Simulcast makes the encoder continuously produce an extra
+            // lower-res layer alongside the real one - pure encoder CPU
+            // overhead screen share to a small self-hosted instance
+            // doesn't need. VP8 (the room-wide default codec, tuned for
+            // camera video) is software-only in effectively every
+            // browser; H.264 is usually hardware-accelerated, which is
+            // what actually makes sustained 1080p60 achievable. Codec and
+            // simulcast are fixed at publish time (can't be changed by
+            // the quality-switch codepath below), so set both here.
+            simulcast: false,
+            videoCodec: "h264",
+          },
         );
 
         const screenAudioTrack = room.localParticipant.getTrackPublication(
@@ -672,6 +689,19 @@ class Voice {
                   contentHint: quality.contentHint,
                 },
                 quality.encoding,
+              );
+              // LiveKit defaults every screen-share track's encoder to
+              // "maintain-resolution" regardless of the chosen preset, so
+              // under CPU/bandwidth pressure it drops frames before ever
+              // dropping resolution - silently capping the actual framerate
+              // of "high60" well below the requested 60fps. Match the
+              // encoder's priority to what the contentHint already implies:
+              // "motion" presets (low/high/high60) want smooth motion, only
+              // "text" genuinely wants to keep resolution over framerate.
+              await localTrack.videoTrack.setDegradationPreference(
+                quality.contentHint === "motion"
+                  ? "maintain-framerate"
+                  : "maintain-resolution",
               );
               if (!audio && screenAudioTrack?.track) {
                 room.localParticipant.unpublishTrack(screenAudioTrack.track);

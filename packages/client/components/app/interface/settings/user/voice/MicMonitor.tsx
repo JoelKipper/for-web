@@ -85,19 +85,29 @@ export function MicMonitor() {
   const startPlayback = async () => {
     if (!processor?.processedTrack || !audioEl) return;
 
-    audioEl.srcObject = new MediaStream([processor.processedTrack]);
+    try {
+      audioEl.srcObject = new MediaStream([processor.processedTrack]);
 
-    const sinkId = voice.preferredAudioOutputDevice;
-    if (sinkId && "setSinkId" in audioEl) {
-      await (
-        audioEl as HTMLAudioElement & {
-          setSinkId(id: string): Promise<void>;
+      const sinkId = voice.preferredAudioOutputDevice;
+      if (sinkId && "setSinkId" in audioEl) {
+        try {
+          await (
+            audioEl as HTMLAudioElement & {
+              setSinkId(id: string): Promise<void>;
+            }
+          ).setSinkId(sinkId);
+        } catch {
+          // Saved output device isn't available right now (unplugged,
+          // different machine, etc.) - fall back to the system default
+          // rather than aborting playback entirely.
         }
-      ).setSinkId(sinkId);
-    }
+      }
 
-    await audioEl.play();
-    setPlayingBack(true);
+      await audioEl.play();
+      setPlayingBack(true);
+    } catch (err) {
+      modals.openModal({ type: "error2", error: err });
+    }
   };
 
   const stopMonitor = async () => {
