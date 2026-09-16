@@ -21,6 +21,7 @@ import { Row } from "@revolt/ui/components/layout";
 import { OverflowingText } from "@revolt/ui/components/utils";
 import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
+import { StreamStats } from "./StreamStats";
 import { VoiceStatefulUserIcons } from "../VoiceStatefulUserIcons";
 
 type TileProps = {
@@ -143,6 +144,9 @@ export function ParticipantTile(props: TileProps) {
               });
             }}
           />
+        </Show>
+        <Show when={isScreenShare()}>
+          <StreamStats track={track} />
         </Show>
         <Overlay showOnHover={isScreenShare()}>
           <OverlayInner>
