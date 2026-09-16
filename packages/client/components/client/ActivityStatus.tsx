@@ -29,24 +29,57 @@ export function ActivityStatusWorker() {
 
   async function poll() {
     const self = user();
-    if (!self || !window.native?.getActiveWindow) return;
 
-    const app = await window.native.getActiveWindow();
-    if (app === lastReportedApp) return;
+    if (!self) {
+      console.debug("[ActivityStatus] skipping poll: no logged-in user yet");
+      return;
+    }
+
+    if (!window.native?.getActiveWindow) {
+      console.debug(
+        "[ActivityStatus] skipping poll: window.native.getActiveWindow is not available",
+      );
+      return;
+    }
+
+    let app: string | undefined;
+    try {
+      app = await window.native.getActiveWindow();
+    } catch (err) {
+      console.error("[ActivityStatus] getActiveWindow() threw", err);
+      return;
+    }
+
+    console.debug("[ActivityStatus] getActiveWindow() ->", app);
+
+    if (app === lastReportedApp) {
+      console.debug("[ActivityStatus] unchanged, not updating status");
+      return;
+    }
     lastReportedApp = app;
 
-    await self.edit({
-      status: {
-        ...self.status,
-        text: app ? t`Playing ${app}` : undefined,
-      },
-    });
+    try {
+      await self.edit({
+        status: {
+          ...self.status,
+          text: app ? t`Playing ${app}` : undefined,
+        },
+      });
+      console.debug("[ActivityStatus] status updated ->", app);
+    } catch (err) {
+      console.error("[ActivityStatus] failed to update status", err);
+    }
   }
 
   createEffect(() => {
     const enabled =
       !!window.native?.getActiveWindow &&
       settings.getValue("desktop:activity_status");
+
+    console.debug("[ActivityStatus] enabled state changed ->", enabled, {
+      hasNativeMethod: !!window.native?.getActiveWindow,
+      settingOn: settings.getValue("desktop:activity_status"),
+    });
 
     if (enabled && !interval) {
       poll();

@@ -21,7 +21,11 @@ jobs:
     outputs:
       release_created: ${{ steps.rp.outputs.release_created }}
     steps:
+      # Only the upstream repo has this GitHub App configured. Forks fall
+      # back to the default GITHUB_TOKEN below (continue-on-error since
+      # `secrets` can't be referenced in `if:` to skip this conditionally).
       - id: app-token
+        continue-on-error: true
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ secrets.GH_STOAT_RELEASE_APP_ID }}
@@ -29,18 +33,18 @@ jobs:
       - id: rp
         uses: googleapis/release-please-action@v4
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
 
       - uses: actions/checkout@v4
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           submodules: recursive
 
       - name: Generate i18n catalog
         if: ${{ steps.rp.outputs.prs_created == 'true' || steps.rp.outputs.prs_updated == 'true' }}
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           RP_PR_OUTPUT_JSON: ${{ steps.rp.outputs.prs }}
         run: |
           PR_NUMBER=$(echo "$RP_PR_OUTPUT_JSON" | jq -r '.[0].number')
@@ -80,13 +84,14 @@ jobs:
 
     steps:
       - id: app-token
+        continue-on-error: true
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ secrets.GH_STOAT_RELEASE_APP_ID }}
           private-key: ${{ secrets.GH_STOAT_RELEASE_APP_PRIVATE_KEY }}
       - uses: actions/checkout@v4
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
       - run: |
           git fetch origin stable:stable
           git push origin main:stable -f

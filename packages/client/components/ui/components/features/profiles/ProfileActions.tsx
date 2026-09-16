@@ -78,9 +78,7 @@ export function ProfileActions(props: {
         <Show
           when={props.compact}
           fallback={
-            <Button onPress={() => props.user.addFriend()}>
-              Add Friend
-            </Button>
+            <Button onPress={() => props.user.addFriend()}>Add Friend</Button>
           }
         >
           <IconButton onPress={() => props.user.addFriend()}>
@@ -120,7 +118,10 @@ export function ProfileActions(props: {
         </Show>
       </Show>
       <Show when={props.user.relationship === "Friend"}>
-        <Show when={props.compact} fallback={<Button onPress={openDm}>Message</Button>}>
+        <Show
+          when={props.compact}
+          fallback={<Button onPress={openDm}>Message</Button>}
+        >
           <IconButton onPress={openDm}>
             <MdChat {...iconSize(16)} />
           </IconButton>

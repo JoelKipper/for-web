@@ -247,6 +247,10 @@ msgstr "12 hodin"
 msgid "24 hours"
 msgstr "24 hodin"
 
+#: components/instance/index.tsx
+msgid "A new version is available."
+msgstr ""
+
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Able to access channels on this server"
 msgstr "Má přístup do kanalů na tomto serveru"
@@ -429,6 +433,14 @@ msgstr "Ověřovací aplikace"
 #: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
 msgid "Automatic Gain Control"
 msgstr "Automatická regulace mikrofonu"
+
+#: components/modal/modals/ScreenSharePicker.tsx
+msgid "Automatically follow whichever window is focused"
+msgstr ""
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Automatically show the app you're currently using as your status."
+msgstr ""
 
 #: components/app/interface/settings/user/profile/UserProfileEditor.tsx
 msgid "Avatar"
@@ -2384,6 +2396,10 @@ msgstr "Moderátor Platformy"
 msgid "Play sound"
 msgstr "Přehrát zvuk"
 
+#: components/client/ActivityStatus.tsx
+msgid "Playing {app}"
+msgstr ""
+
 #: components/modal/modals/MFAFlow.tsx
 msgid "Please confirm this action using the selected method."
 msgstr "Potvrďte tuto akci pomocí vybrané metody."
@@ -2542,6 +2558,10 @@ msgstr "Odmítnout žádost o přátelství"
 #: src/interface/channels/text/TextSearchSidebar.tsx
 msgid "Relevance"
 msgstr "Relevance"
+
+#: components/instance/index.tsx
+msgid "Reload"
+msgstr ""
 
 #: components/markdown/plugins/anchors.tsx
 msgid "Remote Channel"
@@ -2946,6 +2966,10 @@ msgstr ""
 
 #: components/app/interface/settings/user/Native.tsx
 msgid "Show corrections and suggestions as you type."
+msgstr ""
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Show Current Activity"
 msgstr ""
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardActiveRoom.tsx

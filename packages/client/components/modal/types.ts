@@ -342,6 +342,7 @@ export type Modals =
         idx: number,
         qualityName: ScreenShareQualityName,
         audio: boolean,
+        trackActiveWindow?: boolean,
       ) => void;
       qualities: { name: string; fullName: string }[];
       sources: {
@@ -350,6 +351,8 @@ export type Modals =
         isFullScreen: boolean;
         image?: string;
       }[];
+      /** Whether the desktop build supports following the focused window */
+      canTrackActiveWindow?: boolean;
       onCancel: () => void;
     }
   | {

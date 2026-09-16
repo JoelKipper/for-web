@@ -301,6 +301,10 @@ msgstr "24 години"
 #~ msgid "7 days"
 #~ msgstr ""
 
+#: components/instance/index.tsx
+msgid "A new version is available."
+msgstr ""
+
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Able to access channels on this server"
 msgstr "Має доступ до каналів на цьому сервері"
@@ -485,6 +489,14 @@ msgstr "Застосунок для автентифікації"
 
 #: components/app/interface/settings/user/voice/VoiceProcessingOptions.tsx
 msgid "Automatic Gain Control"
+msgstr ""
+
+#: components/modal/modals/ScreenSharePicker.tsx
+msgid "Automatically follow whichever window is focused"
+msgstr ""
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Automatically show the app you're currently using as your status."
 msgstr ""
 
 #: components/app/interface/settings/user/profile/UserProfileEditor.tsx
@@ -2459,6 +2471,10 @@ msgstr "Модератор платформи"
 msgid "Play sound"
 msgstr "Грати звук"
 
+#: components/client/ActivityStatus.tsx
+msgid "Playing {app}"
+msgstr ""
+
 #: components/modal/modals/MFAFlow.tsx
 msgid "Please confirm this action using the selected method."
 msgstr "Будь ласка, підтвердьте цю дію вибраним методом."
@@ -2620,6 +2636,10 @@ msgstr "Відхилити запит на дружбу"
 #: src/interface/channels/text/TextSearchSidebar.tsx
 msgid "Relevance"
 msgstr "Актуальні"
+
+#: components/instance/index.tsx
+msgid "Reload"
+msgstr ""
 
 #: components/markdown/plugins/anchors.tsx
 msgid "Remote Channel"
@@ -3031,6 +3051,10 @@ msgstr "Транслювати екран"
 #: components/app/interface/settings/user/Native.tsx
 msgid "Show corrections and suggestions as you type."
 msgstr "Показувати виправлення і пропозиції під час друку."
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Show Current Activity"
+msgstr ""
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardActiveRoom.tsx
 msgid "Show Others"

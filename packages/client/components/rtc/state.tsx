@@ -99,6 +99,7 @@ class Voice {
   private limits;
   private screenShareTracks: Set<string>;
   private voiceProcessor?: VoiceProcessor;
+  private stopTrackingActiveWindow?: () => void;
 
   /**
    * Bumped by every connect()/disconnect() call. An in-flight connect()
@@ -543,6 +544,9 @@ class Voice {
     if (!room) throw "invalid state";
 
     if (this.screenshare()) {
+      this.stopTrackingActiveWindow?.();
+      this.stopTrackingActiveWindow = undefined;
+
       await room.localParticipant.setScreenShareEnabled(false);
 
       this.#setScreenshare(room.localParticipant.isScreenShareEnabled);
@@ -552,12 +556,14 @@ class Voice {
       const qualities = this.getEnabledScreenShareQualities();
       let screenPickerQualityName: ScreenShareQualityName | undefined;
       let screenPickerAudio: boolean | undefined;
+      let screenPickerTrackActiveWindow = false;
 
       // Register the modal on screen picker handler if it exists
       if (window.native && window.native.onceScreenPicker) {
         window.native.onceScreenPicker((sources) => {
           this.openModal({
             type: "screen_share_picker",
+            canTrackActiveWindow: !!window.native?.onActiveWindowTrackSwitch,
             onCancel: () => {
               window.native.screenPickerCallback(-1, false);
             },
@@ -565,10 +571,12 @@ class Voice {
               idx: number,
               qualityName: ScreenShareQualityName,
               audio: boolean,
+              trackActiveWindow?: boolean,
             ) => {
-              window.native.screenPickerCallback(idx, audio);
+              window.native.screenPickerCallback(idx, audio, trackActiveWindow);
               screenPickerQualityName = qualityName;
               screenPickerAudio = audio;
+              screenPickerTrackActiveWindow = !!trackActiveWindow;
             },
             sources: sources,
             qualities: Object.keys(qualities).map((k) => {
@@ -619,6 +627,38 @@ class Voice {
         this.#setScreenshare(room.localParticipant.isScreenShareEnabled);
 
         if (localTrack) {
+          // If the user opted into following the focused window, hand the
+          // desktop app a callback: every time it tells us the focused
+          // window changed, grab a fresh capture for that window and swap
+          // it into the already-published screen share track in place.
+          if (
+            screenPickerTrackActiveWindow &&
+            window.native?.onActiveWindowTrackSwitch
+          ) {
+            this.stopTrackingActiveWindow =
+              window.native.onActiveWindowTrackSwitch(async (sourceId) => {
+                try {
+                  const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: false,
+                    video: {
+                      mandatory: {
+                        chromeMediaSource: "desktop",
+                        chromeMediaSourceId: sourceId,
+                      },
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    } as any,
+                  });
+
+                  const [newTrack] = stream.getVideoTracks();
+                  if (newTrack && localTrack.videoTrack) {
+                    await localTrack.videoTrack.replaceTrack(newTrack);
+                  }
+                } catch (e) {
+                  this.onErr(e);
+                }
+              });
+          }
+
           // This event is only fired if the screen share is ended by closing the window being streamed.
           // This catches the ending and disables screen sharing on our side. If this weren't here,
           // livekit would still share stream audio after closing the window being streamed.
