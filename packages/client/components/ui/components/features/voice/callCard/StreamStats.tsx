@@ -187,7 +187,10 @@ export function StreamStats(props: { track: TrackReferenceOrPlaceholder }) {
 
   return (
     <>
-      <ToggleCorner>
+      {/* The tile itself toggles focus on click - stop the button press
+          from bubbling up to that, otherwise clicking the info button also
+          flips the tile in/out of focus instead of just opening the panel. */}
+      <ToggleCorner onClick={(e) => e.stopPropagation()}>
         <IconButton
           size="xs"
           variant={open() ? "tonal" : "standard"}
