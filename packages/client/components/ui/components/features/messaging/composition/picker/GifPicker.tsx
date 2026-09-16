@@ -14,11 +14,7 @@ import { Trans } from "@lingui/solid/macro";
 import { useQuery } from "@tanstack/solid-query";
 import { styled } from "styled-system/jsx";
 
-import { useClient } from "@revolt/client";
-import { useInstance } from "@revolt/instance";
-import { useState } from "@revolt/state";
 import {
-  Button,
   CircularProgress,
   IconButton,
   Text,
@@ -30,24 +26,36 @@ import { Symbol } from "@revolt/ui/components/utils/Symbol";
 import { CompositionMediaPickerContext } from "./CompositionMediaPicker";
 
 /**
- * Section ID used to persist permanent dismissal of the Gifbox explainer
+ * Called directly from the browser (see fetchKlipy below) rather than through
+ * our own gifbox proxy - Stoat's API never actually exposed a gifbox URL to
+ * clients (RevoltFeatures in crates/delta/src/routes/root.rs has no gifbox
+ * field), so instance.gifboxUrl was always undefined and every request here
+ * hung. This key is necessarily public since it ships in the client bundle -
+ * rotate/restrict it from Klipy's own dashboard if that's ever needed.
  */
-const GIFBOX_EXPLAINER_DISMISS_KEY = "gifbox-explainer-dismissed";
+const KLIPY_API_BASE_URL = "https://api.klipy.com/v2";
+const KLIPY_API_KEY = "Hf6kGjOf1rvRIAv5Jab2ehlbxNNnKS5XlbCnrzI3iVs44ucZHbvN44k53JVw5jn8";
 
-/**
- * Link to more information about Gifbox
- */
-const GIFBOX_LEARN_MORE_URL = "https://stoat.gg/meet-gifbox";
+function fetchKlipy<T>(path: string, params: Record<string, string>): Promise<T> {
+  const query = new URLSearchParams({
+    key: KLIPY_API_KEY,
+    client_key: "Gifbox",
+    contentfilter: "high",
+    ...params,
+  });
 
-/**
- * Link to upload GIFs to Gifbox
- */
-const GIFBOX_UPLOAD_URL = "https://gifbox.me/upload";
+  return fetch(`${KLIPY_API_BASE_URL}${path}?${query}`).then((r) => {
+    if (!r.ok) throw new Error(`Klipy request failed: ${r.status}`);
+    return r.json();
+  });
+}
 
 type GifCategory = { title: string; image: string };
 
+type KlipyCategory = { searchterm: string; image: string };
+
 type GifResult = {
-  url: string;
+  itemurl: string;
   media_formats: Record<"webm" | "tinywebm", { url: string }>;
 };
 
@@ -60,7 +68,6 @@ export function GifPicker() {
 
   return (
     <Stack>
-      <GifboxExplainer />
       <SearchArea>
         <Show when={filter()}>
           <span
@@ -111,93 +118,6 @@ const Stack = styled("div", {
     display: "flex",
     flexDirection: "column",
     gap: "var(--gap-md)",
-  },
-});
-
-/**
- * One-time explainer letting people know GIFs are powered by Gifbox now.
- */
-function GifboxExplainer() {
-  const state = useState();
-
-  // state can briefly be null while the picker is animating out and its reactive scope is being disposed, guard it!
-  const dismissed = () =>
-    state?.layout.getSectionState(GIFBOX_EXPLAINER_DISMISS_KEY, false) ?? false;
-
-  return (
-    <Show when={!dismissed()}>
-      <Explainer
-        onMouseDown={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-        }}
-      >
-        <Text class="title" size="small">
-          <Trans>GIFs are now powered by Gifbox</Trans>
-        </Text>
-        <ExplainerBody>
-          <Trans>
-            Gifbox is our own GIF service, so you can keep sharing GIFs right
-            here on Stoat.
-          </Trans>
-        </ExplainerBody>
-        <ExplainerActions>
-          <Button
-            variant="text"
-            onPress={() =>
-              window.open(
-                GIFBOX_LEARN_MORE_URL,
-                "_blank",
-                "noopener,noreferrer",
-              )
-            }
-          >
-            <Trans>Learn more</Trans>
-          </Button>
-          <Button
-            variant="filled"
-            onPress={() =>
-              state?.layout.setSectionState(GIFBOX_EXPLAINER_DISMISS_KEY, true)
-            }
-          >
-            <Trans>Got it</Trans>
-          </Button>
-        </ExplainerActions>
-      </Explainer>
-    </Show>
-  );
-}
-
-const Explainer = styled("div", {
-  base: {
-    flexShrink: 0,
-    display: "flex",
-    flexDirection: "column",
-    gap: "var(--gap-sm)",
-
-    marginInline: "var(--gap-md)",
-    padding: "var(--gap-l)",
-
-    borderRadius: "var(--borderRadius-md)",
-    background: "var(--md-sys-color-surface-container-high)",
-    color: "var(--md-sys-color-on-surface)",
-  },
-});
-
-const ExplainerBody = styled("span", {
-  base: {
-    ...typography.raw({ class: "body", size: "small" }),
-    color: "var(--md-sys-color-on-surface-variant)",
-  },
-});
-
-const ExplainerActions = styled("div", {
-  base: {
-    display: "flex",
-    justifyContent: "end",
-    gap: "var(--gap-sm)",
-    marginTop: "var(--gap-xs)",
   },
 });
 
@@ -317,25 +237,16 @@ type CategoryItem =
     };
 
 function Categories() {
-  const client = useClient();
-  const instance = useInstance();
-
   const setFilter = useContext(FilterContext);
 
   const trendingCategories = useQuery<GifCategory[]>(() => ({
     queryKey: ["trendingGifCategories"],
-    queryFn: () => {
-      const [authHeader, authHeaderValue] = client()!.authenticationHeader;
-
-      return fetch(`${instance.gifboxUrl}/categories?locale=en_US`, {
-        headers: {
-          [authHeader]: authHeaderValue,
-        },
-      }).then((r) => {
-        if (!r.ok) throw new Error(`Gifbox categories failed: ${r.status}`);
-        return r.json();
-      });
-    },
+    queryFn: () =>
+      fetchKlipy<{ tags: KlipyCategory[] }>("/categories", {
+        locale: "en_US",
+      }).then((data) =>
+        data.tags.map((tag) => ({ title: tag.searchterm, image: tag.image })),
+      ),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   }));
@@ -436,33 +347,20 @@ const Label = styled("span", {
 });
 
 function GifSearch(props: { query: string }) {
-  const client = useClient();
-  const instance = useInstance();
-
   const { onMessage } = useContext(CompositionMediaPickerContext);
 
   const search = useQuery<GifResult[]>(() => ({
     queryKey: ["gifs", props.query],
-    queryFn: () => {
-      const [authHeader, authHeaderValue] = client()!.authenticationHeader;
-
-      return fetch(
-        `${instance.gifboxUrl}/` +
-          (props.query === "trending"
-            ? `trending?locale=en_US`
-            : `search?locale=en_US&query=${encodeURIComponent(props.query)}`),
+    queryFn: () =>
+      fetchKlipy<{ results: GifResult[] }>(
+        props.query === "trending" ? "/featured" : "/search",
         {
-          headers: {
-            [authHeader]: authHeaderValue,
-          },
+          locale: "en_US",
+          media_filter: "webm,tinywebm",
+          limit: "50",
+          ...(props.query === "trending" ? {} : { q: props.query }),
         },
-      )
-        .then((r) => {
-          if (!r.ok) throw new Error(`Gifbox search failed: ${r.status}`);
-          return r.json();
-        })
-        .then((resp) => resp.results);
-    },
+      ).then((data) => data.results),
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   }));
@@ -481,22 +379,6 @@ function GifSearch(props: { query: string }) {
           <Text class="title" size="small">
             <Trans>No GIFs found</Trans>
           </Text>
-          <ExplainerBody>
-            <Trans>
-              Can't find the perfect GIF? Head to Gifbox and upload your own for
-              everyone to use.
-            </Trans>
-          </ExplainerBody>
-          <ButtonSpacing>
-            <Button
-              variant="filled"
-              onPress={() =>
-                window.open(GIFBOX_UPLOAD_URL, "_blank", "noopener,noreferrer")
-              }
-            >
-              <Trans>Upload to Gifbox</Trans>
-            </Button>
-          </ButtonSpacing>
         </Centered>
       }
     >
@@ -507,7 +389,7 @@ function GifSearch(props: { query: string }) {
               <GifTile
                 role="listitem"
                 tabIndex={0}
-                onClick={() => onMessage(gif.url)}
+                onClick={() => onMessage(gif.itemurl)}
                 onMouseDown={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -525,48 +407,10 @@ function GifSearch(props: { query: string }) {
             )}
           </For>
         </Masonry>
-        <EndOfResults
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-          }}
-        >
-          <ExplainerBody>
-            <Trans>Got a better GIF? Share it with everyone on Gifbox.</Trans>
-          </ExplainerBody>
-          <ButtonSpacing>
-            <Button
-              variant="text"
-              onPress={() =>
-                window.open(GIFBOX_UPLOAD_URL, "_blank", "noopener,noreferrer")
-              }
-            >
-              <Trans>Upload to Gifbox</Trans>
-            </Button>
-          </ButtonSpacing>
-        </EndOfResults>
       </Scroller>
     </Show>
   );
 }
-
-const ButtonSpacing = styled("div", {
-  base: {
-    marginTop: "var(--gap-s)",
-  },
-});
-
-const EndOfResults = styled("div", {
-  base: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "var(--gap-sm)",
-    paddingBlock: "var(--gap-l)",
-    textAlign: "center",
-  },
-});
 
 /**
  * CSS column masonry — keeps each GIF's natural aspect ratio
