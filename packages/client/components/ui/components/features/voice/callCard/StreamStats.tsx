@@ -1,4 +1,11 @@
-import { Show, createSignal, onCleanup } from "solid-js";
+import {
+  Accessor,
+  Setter,
+  Show,
+  createEffect,
+  createSignal,
+  onCleanup,
+} from "solid-js";
 
 import type { VideoReceiverStats, VideoSenderStats } from "livekit-client";
 import { styled } from "styled-system/jsx";
@@ -139,8 +146,11 @@ function receiverRows(
  * few seconds so quality issues (CPU vs bandwidth vs network loss) can be
  * diagnosed without needing chrome://webrtc-internals.
  */
-export function StreamStats(props: { track: TrackReferenceOrPlaceholder }) {
-  const [open, setOpen] = createSignal(false);
+export function StreamStats(props: {
+  track: TrackReferenceOrPlaceholder;
+  open: Accessor<boolean>;
+  setOpen: Setter<boolean>;
+}) {
   const [rows, setRows] = createSignal<Row[]>([]);
 
   let timer: ReturnType<typeof setInterval> | undefined;
@@ -166,11 +176,10 @@ export function StreamStats(props: { track: TrackReferenceOrPlaceholder }) {
     }
   }
 
-  function toggle() {
-    const next = !open();
-    setOpen(next);
-
-    if (next) {
+  // Reacts to `open` regardless of who flipped it - the tile's own hover
+  // button, or the "Connection stats" entry in the right-click context menu.
+  createEffect(() => {
+    if (props.open()) {
       prevSender = undefined;
       prevReceiver = undefined;
       poll();
@@ -179,7 +188,7 @@ export function StreamStats(props: { track: TrackReferenceOrPlaceholder }) {
       clearInterval(timer);
       timer = undefined;
     }
-  }
+  });
 
   onCleanup(() => {
     if (timer) clearInterval(timer);
@@ -193,8 +202,8 @@ export function StreamStats(props: { track: TrackReferenceOrPlaceholder }) {
       <ToggleCorner onClick={(e) => e.stopPropagation()}>
         <IconButton
           size="xs"
-          variant={open() ? "tonal" : "standard"}
-          onPress={toggle}
+          variant={props.open() ? "tonal" : "standard"}
+          onPress={() => props.setOpen((v) => !v)}
           use:floating={{
             tooltip: { placement: "bottom", content: "Connection stats" },
           }}
@@ -202,7 +211,7 @@ export function StreamStats(props: { track: TrackReferenceOrPlaceholder }) {
           <Symbol>monitoring</Symbol>
         </IconButton>
       </ToggleCorner>
-      <Show when={open()}>
+      <Show when={props.open()}>
         <Panel>
           <Show
             when={rows().length}

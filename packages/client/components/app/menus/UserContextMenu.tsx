@@ -27,6 +27,7 @@ export function UserContextMenu(props: {
   contextMessage?: Message;
   inVoice?: boolean;
   isScreenshare?: boolean;
+  onOpenStats?: () => void;
 }) {
   // TODO: if we take serverId instead, we could dynamically fetch server member here
   // same for the floating menu I guess?
@@ -446,6 +447,20 @@ export function UserContextMenu(props: {
           <Trans>Mute Screen Share</Trans>
         </ContextMenuButton>
 
+        <ContextMenuDivider />
+      </Show>
+
+      <Show when={props.isScreenshare && props.onOpenStats}>
+        <ContextMenuButton
+          symbol={
+            <IconSlot>
+              <Symbol size={16}>monitoring</Symbol>
+            </IconSlot>
+          }
+          onClick={() => props.onOpenStats?.()}
+        >
+          <Trans>Connection stats</Trans>
+        </ContextMenuButton>
         <ContextMenuDivider />
       </Show>
 

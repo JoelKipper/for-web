@@ -40,6 +40,8 @@ export function ParticipantTile(props: TileProps) {
 
   let videoRef: HTMLVideoElement | undefined;
 
+  const [statsOpen, setStatsOpen] = createSignal(false);
+
   const [videoDims, setVideoDims] = createSignal<{
     height: number;
     width: number;
@@ -108,6 +110,7 @@ export function ParticipantTile(props: TileProps) {
               member={user().member}
               inVoice={!isScreenShare()}
               isScreenshare={isScreenShare()}
+              onOpenStats={() => setStatsOpen(true)}
             />
           ),
         }}
@@ -146,7 +149,7 @@ export function ParticipantTile(props: TileProps) {
           />
         </Show>
         <Show when={isScreenShare()}>
-          <StreamStats track={track} />
+          <StreamStats track={track} open={statsOpen} setOpen={setStatsOpen} />
         </Show>
         <Overlay showOnHover={isScreenShare()}>
           <OverlayInner>
