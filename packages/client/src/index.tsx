@@ -26,6 +26,7 @@ import {
   ActivityStatusWorker,
   ClientContext,
   SoundContext,
+  SpotifyActivityWorker,
   useClient,
 } from "@revolt/client";
 import { DeviceContext } from "@revolt/common";
@@ -142,6 +143,7 @@ function MountContext(props: { children?: JSX.Element }) {
             </SoundContext>
             <SyncWorker />
             <ActivityStatusWorker />
+            <SpotifyActivityWorker />
           </ClientContext>
         </ModalContext>
       </KeybindContext>

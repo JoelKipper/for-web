@@ -86,6 +86,12 @@ interface SettingsDefinition {
    * your status (desktop app only, requires native support)
    */
   "desktop:activity_status": boolean;
+
+  /**
+   * Whether to poll and show currently playing Spotify track as your status,
+   * once a Spotify account is connected
+   */
+  "spotify:enabled": boolean;
 }
 
 /**
@@ -115,6 +121,7 @@ const EXPECTED_TYPES: { [K in keyof SettingsDefinition]: ValueType<K> } = {
   "advanced:copy_id": "boolean",
   "advanced:admin_panel": "boolean",
   "desktop:activity_status": "boolean",
+  "spotify:enabled": "boolean",
 };
 
 /**
@@ -159,6 +166,7 @@ export class Settings extends AbstractStore<"settings", TypeSettings> {
       "advanced:copy_id": false,
       "advanced:admin_panel": false,
       "desktop:activity_status": false,
+      "spotify:enabled": false,
     };
   }
 

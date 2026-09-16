@@ -1,6 +1,7 @@
 import { Match, Show, Switch, createMemo, createSignal } from "solid-js";
 
 import { Trans, useLingui } from "@lingui/solid/macro";
+import { useQuery, useQueryClient } from "@tanstack/solid-query";
 
 import { useClient, useClientLifecycle } from "@revolt/client";
 import {
@@ -8,7 +9,15 @@ import {
   createOwnProfileResource,
 } from "@revolt/client/resources";
 import { useModals } from "@revolt/modal";
-import { CategoryButton, Column, Row, iconSize, useSnackbar } from "@revolt/ui";
+import { useState } from "@revolt/state";
+import {
+  Checkbox,
+  CategoryButton,
+  Column,
+  Row,
+  iconSize,
+  useSnackbar,
+} from "@revolt/ui";
 
 import MdAlternateEmail from "@material-design-icons/svg/outlined/alternate_email.svg?component-solid";
 import MdBlock from "@material-design-icons/svg/outlined/block.svg?component-solid";
@@ -39,9 +48,93 @@ export function MyAccount() {
         showBadges
       />
       <EditAccount />
+      <Connections />
       <MultiFactorAuth />
       <ManageAccount />
     </Column>
+  );
+}
+
+/**
+ * Third-party account connections (currently just Spotify)
+ */
+function Connections() {
+  const client = useClient();
+  const { settings } = useState();
+  const queryClient = useQueryClient();
+
+  function authHeader() {
+    const [name, value] = client()!.authenticationHeader;
+    return { [name]: value };
+  }
+
+  const spotify = useQuery(() => ({
+    queryKey: ["spotifyConnection"],
+    queryFn: () =>
+      fetch("/spotify-svc/now-playing", { headers: authHeader() }).then(
+        (r) => (r.status === 404 ? { connected: false } : { connected: true }),
+      ),
+  }));
+
+  function connectSpotify() {
+    window.location.href = `/spotify-svc/authorize?user=${client()!.user!.id}`;
+  }
+
+  async function disconnectSpotify() {
+    await fetch("/spotify-svc/disconnect", {
+      method: "POST",
+      headers: authHeader(),
+    });
+    settings.setValue("spotify:enabled", false);
+    queryClient.invalidateQueries({ queryKey: ["spotifyConnection"] });
+  }
+
+  return (
+    <CategoryButton.Group>
+      <Switch
+        fallback={
+          <CategoryButton
+            action="chevron"
+            onClick={connectSpotify}
+            icon="blank"
+            description={
+              <Trans>
+                Show what you're listening to as your status, like on
+                Discord.
+              </Trans>
+            }
+          >
+            <Trans>Connect Spotify</Trans>
+          </CategoryButton>
+        }
+      >
+        <Match when={spotify.data?.connected}>
+          <CategoryButton
+            action={
+              <Checkbox checked={settings.getValue("spotify:enabled")} />
+            }
+            onClick={() =>
+              settings.setValue(
+                "spotify:enabled",
+                !settings.getValue("spotify:enabled"),
+              )
+            }
+            icon="blank"
+            description={<Trans>Show your current Spotify track.</Trans>}
+          >
+            <Trans>Spotify Activity</Trans>
+          </CategoryButton>
+          <CategoryButton
+            action="chevron"
+            onClick={disconnectSpotify}
+            icon="blank"
+            description={<Trans>Remove the Spotify connection.</Trans>}
+          >
+            <Trans>Disconnect Spotify</Trans>
+          </CategoryButton>
+        </Match>
+      </Switch>
+    </CategoryButton.Group>
   );
 }
 

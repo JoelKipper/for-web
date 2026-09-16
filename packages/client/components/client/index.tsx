@@ -19,6 +19,7 @@ import ClientController from "./Controller";
 export type { default as ClientController } from "./Controller";
 
 export { ActivityStatusWorker } from "./ActivityStatus";
+export { SpotifyActivityWorker } from "./SpotifyActivity";
 export { useNotifications } from "./NotificationsController";
 export { SoundContext, SoundController, useSound } from "./Sounds";
 

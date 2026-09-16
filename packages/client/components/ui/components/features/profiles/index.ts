@@ -7,6 +7,7 @@ import { ProfileJoined } from "./ProfileJoined";
 import { ProfileMutuals } from "./ProfileMutuals";
 import { ProfileOwner } from "./ProfileOwner";
 import { ProfileRoles } from "./ProfileRoles";
+import { ProfileSpotify } from "./ProfileSpotify";
 import { ProfileStatus } from "./ProfileStatus";
 
 export const Profile = {
@@ -18,6 +19,7 @@ export const Profile = {
   Joined: ProfileJoined,
   Mutuals: ProfileMutuals,
   Roles: ProfileRoles,
+  Spotify: ProfileSpotify,
   Status: ProfileStatus,
   Owner: ProfileOwner,
 };
