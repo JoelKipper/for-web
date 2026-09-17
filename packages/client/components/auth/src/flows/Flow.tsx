@@ -50,37 +50,6 @@ export const FlowBase = styled("div", {
 });
 
 /**
- * Liquid-glass wrapper for auth-page buttons. Button itself (@revolt/ui)
- * doesn't expose a class/style prop to restyle per call site, so this
- * wraps it instead: render the Button with variant="text" (no background/
- * border of its own, see Button.tsx's variant styles) inside this, and
- * the wrapper supplies the entire glass surface.
- */
-export const GlassButton = styled("div", {
-  base: {
-    borderRadius: "999px",
-    overflow: "hidden",
-    background:
-      "linear-gradient(135deg, color-mix(in srgb, var(--md-sys-color-on-surface) 16%, transparent) 0%, color-mix(in srgb, var(--md-sys-color-on-surface) 5%, transparent) 100%)",
-    backdropFilter: "blur(20px) saturate(180%)",
-    border:
-      "1px solid color-mix(in srgb, var(--md-sys-color-on-surface) 20%, transparent)",
-    boxShadow:
-      "inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 16px -6px rgba(0, 0, 0, 0.35)",
-    transition: "var(--transitions-medium) background",
-
-    "&:hover": {
-      background:
-        "linear-gradient(135deg, color-mix(in srgb, var(--md-sys-color-on-surface) 22%, transparent) 0%, color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent) 100%)",
-    },
-
-    "& button": {
-      width: "100%",
-    },
-  },
-});
-
-/**
  * Wave animation
  * TODO: I don't think this is how you use it
  */

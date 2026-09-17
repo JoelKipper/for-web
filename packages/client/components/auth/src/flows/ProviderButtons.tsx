@@ -9,9 +9,9 @@ import {
 } from "solid-icons/bi";
 import { styled } from "styled-system/jsx";
 
-import { Button, Column, Row, Tooltip } from "@revolt/ui";
+import { Column, Row, Tooltip } from "@revolt/ui";
 
-import { GlassButton } from "./Flow";
+import SpecularButton from "../SpecularButton";
 
 /**
  * Third-party sign-in options shown above the email/password form on both
@@ -39,14 +39,21 @@ export function ProviderButtons() {
       <For each={PROVIDERS}>
         {(provider) => (
           <Tooltip content={t`Coming soon`} placement="top">
-            <GlassButton>
-              <Button variant="text" isDisabled>
-                <Row align justify gap="sm">
-                  <provider.icon size={20} />
-                  {t`Continue with ${provider.label}`}
-                </Row>
-              </Button>
-            </GlassButton>
+            <SpecularButton
+              size="md"
+              radius={999}
+              disabled
+              fullWidth
+              tint="var(--md-sys-color-on-surface)"
+              tintOpacity={0.08}
+              blur={20}
+              textColor="var(--md-sys-color-on-surface)"
+            >
+              <Row align justify gap="sm">
+                <provider.icon size={20} />
+                {t`Continue with ${provider.label}`}
+              </Row>
+            </SpecularButton>
           </Tooltip>
         )}
       </For>

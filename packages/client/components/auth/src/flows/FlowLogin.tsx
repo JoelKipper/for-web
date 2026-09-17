@@ -19,10 +19,11 @@ import {
 import MdArrowBack from "@material-design-icons/svg/filled/arrow_back.svg?component-solid";
 
 import { useState } from "@revolt/state";
-import { FlowTitle, GlassButton } from "./Flow";
+import { FlowTitle } from "./Flow";
 import { setFlowCheckEmail } from "./FlowCheck";
 import { Fields, Form } from "./Form";
 import { ProviderButtons } from "./ProviderButtons";
+import SpecularButton from "../SpecularButton";
 
 type Step =
   | { name: "email" }
@@ -140,11 +141,17 @@ export default function FlowLogin() {
                       <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
                     </Button>
                   </a>
-                  <GlassButton>
-                    <Button type="submit" variant="text">
-                      <Trans>Continue</Trans>
-                    </Button>
-                  </GlassButton>
+                  <SpecularButton
+                    type="submit"
+                    size="lg"
+                    radius={999}
+                    tint="var(--md-sys-color-on-surface)"
+                    tintOpacity={0.08}
+                    blur={20}
+                    textColor="var(--md-sys-color-on-surface)"
+                  >
+                    <Trans>Continue</Trans>
+                  </SpecularButton>
                 </Row>
               </Form>
             </Match>
@@ -186,15 +193,21 @@ export default function FlowLogin() {
                         <MdArrowBack {...iconSize("1.2em")} />{" "}
                         <Trans>Change email</Trans>
                       </Button>
-                      <GlassButton>
-                        <Button type="submit" variant="text">
-                          {current().exists ? (
-                            <Trans>Log In</Trans>
-                          ) : (
-                            <Trans>Create Account</Trans>
-                          )}
-                        </Button>
-                      </GlassButton>
+                      <SpecularButton
+                        type="submit"
+                        size="lg"
+                        radius={999}
+                        tint="var(--md-sys-color-on-surface)"
+                        tintOpacity={0.08}
+                        blur={20}
+                        textColor="var(--md-sys-color-on-surface)"
+                      >
+                        {current().exists ? (
+                          <Trans>Log In</Trans>
+                        ) : (
+                          <Trans>Create Account</Trans>
+                        )}
+                      </SpecularButton>
                     </Row>
                   </Form>
                 </>
@@ -239,11 +252,17 @@ export default function FlowLogin() {
               >
                 <MdArrowBack {...iconSize("1.2em")} /> <Trans>Cancel</Trans>
               </Button>
-              <GlassButton>
-                <Button type="submit" variant="text">
-                  <Trans>Confirm</Trans>
-                </Button>
-              </GlassButton>
+              <SpecularButton
+                type="submit"
+                size="lg"
+                radius={999}
+                tint="var(--md-sys-color-on-surface)"
+                tintOpacity={0.08}
+                blur={20}
+                textColor="var(--md-sys-color-on-surface)"
+              >
+                <Trans>Confirm</Trans>
+              </SpecularButton>
             </Row>
           </Form>
         </Match>
