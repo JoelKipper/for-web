@@ -18,6 +18,7 @@ import {
   Deferred,
   MenuButton,
   OverflowingText,
+  SpotifyStatusLine,
   Tooltip,
   UserStatus,
   iconSize,
@@ -300,6 +301,14 @@ function Entry(
               : t`Offline`,
     );
 
+  /**
+   * SpotifyStatusLine renders instead of the plain status text when set -
+   * see SpotifyActivity.tsx for why this is read via a cast.
+   */
+  const spotifyActivity = () =>
+    (local.channel.recipient?.status as { activity?: { type: string } } | undefined)
+      ?.activity;
+
   return (
     <MenuButton
       {...remote}
@@ -391,16 +400,26 @@ function Entry(
             <OverflowingText>
               {local.channel?.recipient?.displayName}
             </OverflowingText>
-            <Show when={status()}>
-              <Tooltip
-                content={() => <TextWithEmoji content={status()!} />}
-                placement="top-start"
-                aria={status()!}
-              >
-                <OverflowingText class={typography({ class: "_status" })}>
-                  <TextWithEmoji content={status()!} />
-                </OverflowingText>
-              </Tooltip>
+            <Show
+              when={spotifyActivity()}
+              fallback={
+                <Show when={status()}>
+                  <Tooltip
+                    content={() => <TextWithEmoji content={status()!} />}
+                    placement="top-start"
+                    aria={status()!}
+                  >
+                    <OverflowingText class={typography({ class: "_status" })}>
+                      <TextWithEmoji content={status()!} />
+                    </OverflowingText>
+                  </Tooltip>
+                </Show>
+              }
+            >
+              <SpotifyStatusLine
+                user={local.channel.recipient!}
+                class={typography({ class: "_status" })}
+              />
             </Show>
           </Match>
         </Switch>

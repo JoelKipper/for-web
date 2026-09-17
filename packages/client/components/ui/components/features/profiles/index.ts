@@ -10,6 +10,8 @@ import { ProfileRoles } from "./ProfileRoles";
 import { ProfileSpotify } from "./ProfileSpotify";
 import { ProfileStatus } from "./ProfileStatus";
 
+export { SpotifyStatusLine } from "./SpotifyStatusLine";
+
 export const Profile = {
   Actions: ProfileActions,
   Badges: ProfileBadges,

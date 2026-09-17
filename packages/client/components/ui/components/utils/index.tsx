@@ -5,6 +5,7 @@ export { Form2 } from "./Form2";
 export { iconSize, symbolSize } from "./iconSize";
 export { Initials } from "./Initials";
 export { ListView } from "./ListView";
+export { MarqueeText } from "./MarqueeText";
 export { NonBreakingText } from "./NonBreakingText";
 export { OverflowingText } from "./OverflowingText";
 export { PreviewStack } from "./PreviewStack";

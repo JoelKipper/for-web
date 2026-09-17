@@ -16,6 +16,7 @@ import {
   MenuButton,
   OverflowingText,
   Row,
+  SpotifyStatusLine,
   Symbol,
   Tooltip,
   typography,
@@ -363,6 +364,17 @@ function Member(props: {
               : t`Offline`,
     );
 
+  /**
+   * SpotifyStatusLine renders instead of the plain status text when set -
+   * see SpotifyActivity.tsx for why this is read via a cast.
+   */
+  const spotifyActivity = () =>
+    (
+      (props.user ?? props.member?.user)?.status as
+        | { activity?: { type: string } }
+        | undefined
+    )?.activity;
+
   return (
     <div
       use:floating={floatingUserMenus(
@@ -411,16 +423,26 @@ function Member(props: {
               </Show>
             </Row>
           </OverflowingText>
-          <Show when={status()}>
-            <Tooltip
-              content={() => <TextWithEmoji content={status()!} />}
-              placement="top-start"
-              aria={status()!}
-            >
-              <OverflowingText class={typography({ class: "_status" })}>
-                <TextWithEmoji content={status()!} />
-              </OverflowingText>
-            </Tooltip>
+          <Show
+            when={spotifyActivity()}
+            fallback={
+              <Show when={status()}>
+                <Tooltip
+                  content={() => <TextWithEmoji content={status()!} />}
+                  placement="top-start"
+                  aria={status()!}
+                >
+                  <OverflowingText class={typography({ class: "_status" })}>
+                    <TextWithEmoji content={status()!} />
+                  </OverflowingText>
+                </Tooltip>
+              </Show>
+            }
+          >
+            <SpotifyStatusLine
+              user={(props.user ?? props.member?.user)!}
+              class={typography({ class: "_status" })}
+            />
           </Show>
         </NameStatusStack>
       </MenuButton>
