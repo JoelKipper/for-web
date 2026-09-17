@@ -119,8 +119,13 @@ export default function DarkVeil(props: DarkVeilProps) {
     const canvas = canvasRef!;
     const parent = canvas.parentElement!;
 
+    // resolutionScale scales the internal render resolution (via dpr),
+    // never the CSS box below - renderer.setSize() also sets
+    // canvas.style.width/height to whatever it's given, so passing it a
+    // scaled-down size would shrink the visible canvas itself, not just
+    // its render resolution (which is what actually happened here).
     const renderer = new Renderer({
-      dpr: Math.min(window.devicePixelRatio, 2),
+      dpr: Math.min(window.devicePixelRatio, 2) * (props.resolutionScale ?? 1),
       canvas,
     });
 
@@ -147,8 +152,7 @@ export default function DarkVeil(props: DarkVeilProps) {
     const resize = () => {
       const w = parent.clientWidth;
       const h = parent.clientHeight;
-      const scale = props.resolutionScale ?? 1;
-      renderer.setSize(w * scale, h * scale);
+      renderer.setSize(w, h);
       program.uniforms.uResolution.value.set(w, h);
     };
 
