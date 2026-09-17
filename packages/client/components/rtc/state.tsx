@@ -725,12 +725,29 @@ class Voice {
             this.stopTrackingActiveWindow =
               window.native.onActiveWindowTrackSwitch(async (sourceId) => {
                 try {
+                  // Without explicit width/height/frameRate constraints
+                  // here, Chromium ignores the resolution/quality the user
+                  // picked entirely and falls back to its own defaults for
+                  // this legacy desktop-capture API - every focus switch
+                  // was silently resetting quality/bitrate settings to
+                  // whatever that default happens to be. Re-request the
+                  // currently selected quality explicitly, same as the
+                  // initial capture.
+                  const activeQuality =
+                    this.getEnabledScreenShareQualities()[
+                      this.#settings.screenShareQuality || "low"
+                    ] ?? qualities.low!;
+
                   const stream = await navigator.mediaDevices.getUserMedia({
                     audio: false,
                     video: {
                       mandatory: {
                         chromeMediaSource: "desktop",
                         chromeMediaSourceId: sourceId,
+                        maxWidth: activeQuality.resolution.width,
+                        maxHeight: activeQuality.resolution.height,
+                        minFrameRate: activeQuality.resolution.frameRate,
+                        maxFrameRate: activeQuality.resolution.frameRate,
                       },
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     } as any,
