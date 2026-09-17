@@ -1,7 +1,5 @@
-import { BiLogosGithub } from "solid-icons/bi";
 import { JSX } from "solid-js";
 
-import { Trans } from "@lingui/solid/macro";
 import { styled } from "styled-system/jsx";
 
 import { Titlebar } from "@revolt/app/interface/desktop/Titlebar";
@@ -12,7 +10,6 @@ import MdDarkMode from "@material-design-icons/svg/filled/dark_mode.svg?componen
 
 import background from "./background.jpg";
 import { FlowBase } from "./flows/Flow";
-import bluesky from "./flows/bluesky.svg";
 
 /**
  * Authentication page layout
@@ -30,6 +27,11 @@ const Base = styled("div", {
     flexDirection: "column",
     justifyContent: "space-between",
 
+    background: "var(--url)",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+
     mdDown: {
       padding: "30px 20px",
     },
@@ -45,15 +47,11 @@ const Root = styled("div", {
 
     color: "var(--md-sys-color-on-surface)",
     background: "var(--md-sys-color-surface)",
-    // background: `var(--url)`,
-    // backgroundPosition: "center",
-    // backgroundRepeat: "no-repeat",
-    // backgroundSize: "cover",
   },
 });
 
 /**
- * Top and bottom navigation bars
+ * Top navigation bar
  */
 const Nav = styled("div", {
   base: {
@@ -61,62 +59,9 @@ const Nav = styled("div", {
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
 
     textDecoration: "none",
-  },
-});
-
-/**
- * Navigation items
- */
-const NavItems = styled("div", {
-  base: {
-    gap: "10px",
-    display: "flex",
-    alignItems: "center",
-
-    fontSize: "0.9em",
-  },
-  variants: {
-    variant: {
-      default: {
-        "& > *": {
-          textAlign: "center",
-        },
-      },
-      stack: {
-        md: {
-          flexDirection: "column",
-        },
-      },
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
-
-/**
- * Link with an icon inside
- */
-const LinkWithIcon = styled("a", {
-  base: { height: "24px" },
-});
-
-/**
- * Middot-like bullet
- */
-const Bullet = styled("div", {
-  base: {
-    height: "5px",
-    width: "5px",
-    background: "grey",
-    borderRadius: "50%",
-
-    md: {
-      display: "none",
-    },
   },
 });
 
@@ -134,7 +79,6 @@ export function AuthPage(props: { children: JSX.Element }) {
         css={{ scrollbar: "hidden" }}
       >
         <Nav>
-          <div />
           <IconButton
             variant="tonal"
             onPress={() =>
@@ -147,36 +91,7 @@ export function AuthPage(props: { children: JSX.Element }) {
           </IconButton>
         </Nav>
         <FlowBase>{props.children}</FlowBase>
-        <Nav>
-          <NavItems variant="stack">
-            <NavItems>
-              <LinkWithIcon href="https://github.com/stoatchat" target="_blank">
-                <BiLogosGithub size={24} />
-              </LinkWithIcon>
-              <LinkWithIcon
-                href="https://bsky.app/profile/stoat.chat"
-                target="_blank"
-              >
-                <img
-                  src={bluesky}
-                  style={{ height: "22px", "padding-top": "3px" }}
-                />
-              </LinkWithIcon>
-            </NavItems>
-            <Bullet />
-            <NavItems>
-              <a href="https://stoat.chat/about" target="_blank">
-                <Trans>About</Trans>
-              </a>
-              <a href="https://stoat.chat/terms" target="_blank">
-                <Trans>Terms of Service</Trans>
-              </a>
-              <a href="https://stoat.chat/privacy" target="_blank">
-                <Trans>Privacy Policy</Trans>
-              </a>
-            </NavItems>
-          </NavItems>
-        </Nav>
+        <Nav />
       </Base>
     </Root>
   );

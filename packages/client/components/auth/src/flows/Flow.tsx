@@ -17,7 +17,15 @@ export const FlowBase = styled("div", {
     flexDirection: "column",
     gap: "var(--gap-lg)",
     flexGrow: 0,
-    background: "var(--md-sys-color-surface-container)",
+    // Glass-over-photo: the auth page now shows background.jpg behind
+    // this card (see AuthPage.tsx), so a fully opaque surface colour no
+    // longer fits - let it show through instead.
+    background:
+      "color-mix(in srgb, var(--md-sys-color-surface-container) 82%, transparent)",
+    backdropFilter: "blur(32px)",
+    border:
+      "1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 55%, transparent)",
+    boxShadow: "0 24px 60px -12px rgba(0, 0, 0, 0.45)",
     color: "var(--md-sys-color-on-surface)",
     maxWidth: "360px",
     maxHeight: "600px",
@@ -30,6 +38,9 @@ export const FlowBase = styled("div", {
 
     _phone: {
       background: "none",
+      backdropFilter: "none",
+      border: "none",
+      boxShadow: "none",
       padding: 0,
     },
   },
