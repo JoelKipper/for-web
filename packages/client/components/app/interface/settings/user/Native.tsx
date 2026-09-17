@@ -66,6 +66,14 @@ declare global {
       onActiveWindowTrackSwitch?(
         callback: (sourceId: string) => void,
       ): () => void;
+
+      /**
+       * Fired when the app is brought back via the stoat:// deep link used
+       * to return here after finishing Spotify OAuth in the system
+       * browser (see Account.tsx's connectSpotify). Not implemented by
+       * every build of the desktop app - always feature-detect before use.
+       */
+      onSpotifyConnected?(callback: () => void): () => void;
     };
 
     desktopConfig: {

@@ -1,4 +1,12 @@
-import { Match, Show, Switch, createMemo, createSignal } from "solid-js";
+import {
+  Match,
+  Show,
+  Switch,
+  createMemo,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
 
 import { Trans, useLingui } from "@lingui/solid/macro";
 import { useQuery, useQueryClient } from "@tanstack/solid-query";
@@ -76,8 +84,20 @@ function Connections() {
       ),
   }));
 
+  // On desktop, the OAuth flow finishes in the system browser (see
+  // for-desktop main.ts) and comes back via a stoat:// deep link rather
+  // than this window reloading, so nothing would otherwise tell this
+  // query it's stale.
+  onMount(() => {
+    const off = window.native?.onSpotifyConnected?.(() => {
+      queryClient.invalidateQueries({ queryKey: ["spotifyConnection"] });
+    });
+    onCleanup(() => off?.());
+  });
+
   function connectSpotify() {
-    window.location.href = `/spotify-svc/authorize?user=${client()!.user!.id}`;
+    const isDesktop = !!window.native;
+    window.location.href = `/spotify-svc/authorize?user=${client()!.user!.id}${isDesktop ? "&client=desktop" : ""}`;
   }
 
   async function disconnectSpotify() {
