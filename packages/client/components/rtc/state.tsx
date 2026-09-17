@@ -215,6 +215,34 @@ class Voice {
       setNoiseSuppression(getSettings().noiseSupression ?? "browser");
       restartTrack();
     });
+
+    // Re-push the screen share encoding whenever the bitrate override
+    // changes, so dragging the settings slider takes effect immediately
+    // instead of only on the next time screen share is (re)started.
+    createEffect(() => {
+      // Reading this establishes the reactive dependency that makes the
+      // effect re-run when the slider moves - getEnabledScreenShareQualities()
+      // reads it too (via withBitrateOverride) to build the new encoding.
+      const maxBitrate = getSettings().screenShareMaxBitrate;
+      void maxBitrate;
+
+      const videoTrack = this.room()?.localParticipant.getTrackPublication(
+        Track.Source.ScreenShare,
+      )?.videoTrack;
+      if (!videoTrack) return;
+
+      const qualities = this.getEnabledScreenShareQualities();
+      const quality =
+        qualities[getSettings().screenShareQuality || "low"] ?? qualities.low!;
+
+      videoTrack.applyScreenShareConstraints(
+        {
+          resolution: quality.resolution,
+          contentHint: quality.contentHint,
+        },
+        quality.encoding,
+      );
+    });
   }
 
   async connect(channel: Channel, auth?: { url: string; token: string }) {
