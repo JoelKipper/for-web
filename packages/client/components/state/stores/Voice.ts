@@ -38,6 +38,13 @@ export const MIC_SENSITIVITY_MIN_DB = -60;
 export const MIC_SENSITIVITY_MAX_DB = -10;
 export const MIC_SENSITIVITY_DEFAULT_DB = -35;
 
+/**
+ * Allowed range for the screen share bitrate override (bps). 0 means "auto"
+ * - fall back to the chosen quality preset's own bitrate.
+ */
+export const SCREEN_SHARE_BITRATE_MIN = 500_000;
+export const SCREEN_SHARE_BITRATE_MAX = 20_000_000;
+
 export interface TypeVoice {
   preferredAudioInputDevice?: string;
   preferredAudioOutputDevice?: string;
@@ -50,6 +57,11 @@ export interface TypeVoice {
   screenShareQuality: ScreenShareQualityName;
   screenShareQualityAsk: boolean;
   screenShareAudio: boolean;
+  /**
+   * Overrides the max bitrate (bps) of whichever screen share quality is
+   * active. 0 means "auto" - use that quality preset's own bitrate.
+   */
+  screenShareMaxBitrate: number;
 
   inputVolume: number;
   outputVolume: number;
@@ -98,6 +110,7 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
       screenShareQuality: "low",
       screenShareQualityAsk: true,
       screenShareAudio: true,
+      screenShareMaxBitrate: 0,
       inputVolume: 1.0,
       outputVolume: 1.0,
       micSensitivity: MIC_SENSITIVITY_DEFAULT_DB,
@@ -161,6 +174,15 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
 
     if (typeof input.screenShareAudio === "boolean") {
       data.screenShareAudio = input.screenShareAudio;
+    }
+
+    if (typeof input.screenShareMaxBitrate === "number") {
+      data.screenShareMaxBitrate = input.screenShareMaxBitrate
+        ? Math.min(
+            SCREEN_SHARE_BITRATE_MAX,
+            Math.max(SCREEN_SHARE_BITRATE_MIN, input.screenShareMaxBitrate),
+          )
+        : 0;
     }
 
     if (typeof input.inputVolume === "number") {
@@ -359,6 +381,21 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
   }
 
   /**
+   * Set screen share max bitrate override (bps), 0 for auto
+   */
+  set screenShareMaxBitrate(value: number) {
+    this.set(
+      "screenShareMaxBitrate",
+      value
+        ? Math.min(
+            SCREEN_SHARE_BITRATE_MAX,
+            Math.max(SCREEN_SHARE_BITRATE_MIN, value),
+          )
+        : 0,
+    );
+  }
+
+  /**
    * Set input volume
    */
   set inputVolume(value: number) {
@@ -457,6 +494,13 @@ export class Voice extends AbstractStore<"voice", TypeVoice> {
    */
   get screenShareAudio(): boolean {
     return this.get().screenShareAudio;
+  }
+
+  /**
+   * Get screen share max bitrate override (bps), 0 for auto
+   */
+  get screenShareMaxBitrate(): number {
+    return this.get().screenShareMaxBitrate ?? 0;
   }
 
   /**

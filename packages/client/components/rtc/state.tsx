@@ -463,6 +463,17 @@ class Voice {
   }
 
   /**
+   * Apply the user's custom screen share bitrate override (settings) on top
+   * of a preset's encoding, if one is set. 0/unset means "auto" - keep the
+   * preset's own bitrate.
+   */
+  private withBitrateOverride(encoding: VideoEncoding): VideoEncoding {
+    const custom = this.#settings.screenShareMaxBitrate;
+    if (!custom) return encoding;
+    return { ...encoding, maxBitrate: custom };
+  }
+
+  /**
    * Get the enabled screen share qualities. "low" will always be enabled.
    * Each screen share quality is checked against the limit if the limit is available on the client.
    *
@@ -483,7 +494,7 @@ class Voice {
         resolution: ScreenSharePresets.h720fps30.resolution,
         fullName: `720p 30FPS`,
         contentHint: "motion",
-        encoding: ScreenSharePresets.h720fps30.encoding,
+        encoding: this.withBitrateOverride(ScreenSharePresets.h720fps30.encoding),
       },
     };
 
@@ -505,14 +516,14 @@ class Voice {
         resolution: high1080p30.resolution,
         fullName: `1080p 30FPS`,
         contentHint: "motion",
-        encoding: high1080p30.encoding,
+        encoding: this.withBitrateOverride(high1080p30.encoding),
       };
       qualities.high60 = {
         name: "high60",
         resolution: high1080p60.resolution,
         fullName: `1080p 60FPS`,
         contentHint: "motion",
-        encoding: high1080p60.encoding,
+        encoding: this.withBitrateOverride(high1080p60.encoding),
       };
       const originalResolution = ScreenSharePresets.original.resolution;
       originalResolution.frameRate = 5;
