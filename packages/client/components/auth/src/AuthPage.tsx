@@ -38,12 +38,17 @@ const Base = styled("div", {
 });
 
 /**
- * Fills the viewport behind everything else - stays put while Base
- * scrolls, so it never scrolls the actual shader canvas.
+ * Fills Root behind everything else - stays put while Base scrolls, so
+ * it never scrolls the actual shader canvas. Positioned absolute against
+ * Root (not fixed against the viewport): fixed's containing block breaks
+ * to the nearest transformed/filtered ancestor, which is easy to end up
+ * inside of unintentionally (theme providers, animation wrappers, etc)
+ * and then the "fullscreen" background only covers whatever that
+ * ancestor's box happens to be instead.
  */
 const VeilLayer = styled("div", {
   base: {
-    position: "fixed",
+    position: "absolute",
     inset: 0,
     zIndex: 0,
   },
@@ -51,9 +56,11 @@ const VeilLayer = styled("div", {
 
 const Root = styled("div", {
   base: {
+    position: "relative",
     display: "flex",
     flexDirection: "column",
-    height: "100%",
+    width: "100vw",
+    height: "100dvh",
     paddingBottom: "env(keyboard-inset-height)",
 
     color: "var(--md-sys-color-on-surface)",
