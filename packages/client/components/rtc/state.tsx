@@ -235,6 +235,12 @@ class Voice {
       const quality =
         qualities[getSettings().screenShareQuality || "low"] ?? qualities.low!;
 
+      // applyScreenShareConstraints() alone isn't enough: livekit-client's
+      // refreshSenderEncodings() only re-pushes encoding params to the
+      // RTCRtpSender when the *resolution* changed since last time - a
+      // bitrate-only change is silently dropped. Keep the constraints call
+      // for resolution/contentHint, but push the new maxBitrate to the
+      // sender directly so it actually takes effect.
       videoTrack.applyScreenShareConstraints(
         {
           resolution: quality.resolution,
@@ -242,7 +248,41 @@ class Voice {
         },
         quality.encoding,
       );
+      this.pushSenderMaxBitrate(videoTrack, quality.encoding.maxBitrate);
     });
+  }
+
+  /**
+   * Directly sets maxBitrate on every active encoding of a video track's
+   * RTCRtpSender. Bypasses livekit-client's refreshSenderEncodings(), which
+   * skips the update entirely when the track's resolution hasn't changed -
+   * see the comment at its call site above.
+   */
+  private async pushSenderMaxBitrate(
+    videoTrack: { sender?: RTCRtpSender },
+    maxBitrate: number | undefined,
+  ) {
+    const sender = videoTrack.sender;
+    if (!sender || maxBitrate === undefined) return;
+
+    const params = sender.getParameters();
+    if (!params.encodings?.length) return;
+
+    let changed = false;
+    for (const encoding of params.encodings) {
+      if (encoding.active === false) continue;
+      if (encoding.maxBitrate !== maxBitrate) {
+        encoding.maxBitrate = maxBitrate;
+        changed = true;
+      }
+    }
+    if (!changed) return;
+
+    try {
+      await sender.setParameters(params);
+    } catch (e) {
+      this.onErr(e);
+    }
   }
 
   async connect(channel: Channel, auth?: { url: string; token: string }) {
