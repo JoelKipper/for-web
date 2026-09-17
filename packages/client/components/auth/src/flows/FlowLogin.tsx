@@ -20,6 +20,7 @@ import MdArrowBack from "@material-design-icons/svg/filled/arrow_back.svg?compon
 import { useState } from "@revolt/state";
 import { FlowTitle } from "./Flow";
 import { Fields, Form } from "./Form";
+import { ProviderButtons } from "./ProviderButtons";
 
 /**
  * Flow for logging into an account
@@ -65,6 +66,7 @@ export default function FlowLogin() {
             <FlowTitle subtitle={<Trans>Sign into Stoat</Trans>} emoji="wave">
               <Trans>Welcome!</Trans>
             </FlowTitle>
+            <ProviderButtons />
             <Form onSubmit={performLogin}>
               <Fields fields={["email", "password"]} />
               <Column gap="xl" align>

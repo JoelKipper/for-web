@@ -12,6 +12,7 @@ import MdArrowBack from "@material-design-icons/svg/filled/arrow_back.svg?compon
 import { FlowTitle } from "./Flow";
 import { setFlowCheckEmail } from "./FlowCheck";
 import { Fields, Form } from "./Form";
+import { ProviderButtons } from "./ProviderButtons";
 
 /**
  * Flow for creating a new account
@@ -61,6 +62,7 @@ export default function FlowCreate() {
       <FlowTitle subtitle={<Trans>Create an account</Trans>} emoji="wave">
         <Trans>Hello!</Trans>
       </FlowTitle>
+      <ProviderButtons />
       <Form onSubmit={create} captcha={config.features.captcha.key}>
         <Fields fields={["email", "new-password"]} />
         <Show when={config.features.invite_only}>
