@@ -51,12 +51,12 @@ export default defineConfig({
             transform: "translateY(0px)",
           },
         },
-        marqueeLeftToRight: {
+        marqueeRightToLeft: {
           "0%": {
-            transform: "translateX(-50%)",
+            transform: "translateX(0%)",
           },
           "100%": {
-            transform: "translateX(0%)",
+            transform: "translateX(-50%)",
           },
         },
         highlightMessage: {

@@ -8,9 +8,11 @@ import { useState } from "@revolt/state";
 import { useUser } from ".";
 
 /**
- * How often to poll for the currently playing Spotify track.
+ * How often to poll for the currently playing Spotify track. Kept short so
+ * a track change shows up close to live - Spotify's currently-playing
+ * endpoint is cheap enough per-user to poll this often.
  */
-const POLL_INTERVAL_MS = 20_000;
+const POLL_INTERVAL_MS = 3_000;
 
 /**
  * Matches the `Activity` shape from stoat-api's generated schema

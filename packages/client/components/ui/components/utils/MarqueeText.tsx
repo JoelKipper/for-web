@@ -1,7 +1,7 @@
 import { styled } from "styled-system/jsx";
 
 /**
- * Continuously auto-scrolling single line of text, left to right on a loop.
+ * Continuously auto-scrolling single line of text, right to left on a loop.
  * The content is duplicated internally so the loop has no visible seam -
  * don't pass children that depend on being rendered exactly once (e.g.
  * anything with side effects), plain text/inline content only.
@@ -34,7 +34,7 @@ const Wrapper = styled("div", {
 const Track = styled("div", {
   base: {
     display: "inline-flex",
-    animationName: "marqueeLeftToRight",
+    animationName: "marqueeRightToLeft",
     animationTimingFunction: "linear",
     animationIterationCount: "infinite",
   },
