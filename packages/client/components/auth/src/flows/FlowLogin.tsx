@@ -19,7 +19,7 @@ import {
 import MdArrowBack from "@material-design-icons/svg/filled/arrow_back.svg?component-solid";
 
 import { useState } from "@revolt/state";
-import { FlowTitle } from "./Flow";
+import { FlowTitle, GlassButton } from "./Flow";
 import { setFlowCheckEmail } from "./FlowCheck";
 import { Fields, Form } from "./Form";
 import { ProviderButtons } from "./ProviderButtons";
@@ -140,9 +140,11 @@ export default function FlowLogin() {
                       <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
                     </Button>
                   </a>
-                  <Button type="submit">
-                    <Trans>Continue</Trans>
-                  </Button>
+                  <GlassButton>
+                    <Button type="submit" variant="text">
+                      <Trans>Continue</Trans>
+                    </Button>
+                  </GlassButton>
                 </Row>
               </Form>
             </Match>
@@ -184,13 +186,15 @@ export default function FlowLogin() {
                         <MdArrowBack {...iconSize("1.2em")} />{" "}
                         <Trans>Change email</Trans>
                       </Button>
-                      <Button type="submit">
-                        {current().exists ? (
-                          <Trans>Log In</Trans>
-                        ) : (
-                          <Trans>Create Account</Trans>
-                        )}
-                      </Button>
+                      <GlassButton>
+                        <Button type="submit" variant="text">
+                          {current().exists ? (
+                            <Trans>Log In</Trans>
+                          ) : (
+                            <Trans>Create Account</Trans>
+                          )}
+                        </Button>
+                      </GlassButton>
                     </Row>
                   </Form>
                 </>
@@ -235,9 +239,11 @@ export default function FlowLogin() {
               >
                 <MdArrowBack {...iconSize("1.2em")} /> <Trans>Cancel</Trans>
               </Button>
-              <Button type="submit">
-                <Trans>Confirm</Trans>
-              </Button>
+              <GlassButton>
+                <Button type="submit" variant="text">
+                  <Trans>Confirm</Trans>
+                </Button>
+              </GlassButton>
             </Row>
           </Form>
         </Match>

@@ -11,6 +11,8 @@ import { styled } from "styled-system/jsx";
 
 import { Button, Column, Row, Tooltip } from "@revolt/ui";
 
+import { GlassButton } from "./Flow";
+
 /**
  * Third-party sign-in options shown above the email/password form on both
  * FlowLogin and FlowCreate. Backend OAuth isn't wired up yet (this fork's
@@ -37,12 +39,14 @@ export function ProviderButtons() {
       <For each={PROVIDERS}>
         {(provider) => (
           <Tooltip content={t`Coming soon`} placement="top">
-            <Button variant="outlined" isDisabled>
-              <Row align justify gap="sm">
-                <provider.icon size={20} />
-                {t`Continue with ${provider.label}`}
-              </Row>
-            </Button>
+            <GlassButton>
+              <Button variant="text" isDisabled>
+                <Row align justify gap="sm">
+                  <provider.icon size={20} />
+                  {t`Continue with ${provider.label}`}
+                </Row>
+              </Button>
+            </GlassButton>
           </Tooltip>
         )}
       </For>

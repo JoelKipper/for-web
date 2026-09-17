@@ -3,10 +3,6 @@ import { JSX } from "solid-js";
 import { styled } from "styled-system/jsx";
 
 import { Titlebar } from "@revolt/app/interface/desktop/Titlebar";
-import { useState } from "@revolt/state";
-import { IconButton, iconSize } from "@revolt/ui";
-
-import MdDarkMode from "@material-design-icons/svg/filled/dark_mode.svg?component-solid";
 
 import DarkVeil from "./DarkVeil";
 import { FlowBase } from "./flows/Flow";
@@ -69,17 +65,12 @@ const Root = styled("div", {
 });
 
 /**
- * Top navigation bar
+ * Empty top/bottom strips - kept (rather than removed) so Base's
+ * justify-content: space-between still centers FlowBase vertically.
  */
 const Nav = styled("div", {
   base: {
     height: "32px",
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "flex-end",
-
-    textDecoration: "none",
   },
 });
 
@@ -87,8 +78,6 @@ const Nav = styled("div", {
  * Authentication page
  */
 export function AuthPage(props: { children: JSX.Element }) {
-  const state = useState();
-
   return (
     <Root>
       <VeilLayer>
@@ -96,18 +85,7 @@ export function AuthPage(props: { children: JSX.Element }) {
       </VeilLayer>
       <Titlebar />
       <Base css={{ scrollbar: "hidden" }}>
-        <Nav>
-          <IconButton
-            variant="tonal"
-            onPress={() =>
-              state.theme.setMode(
-                state.theme.activeTheme.darkMode ? "light" : "dark",
-              )
-            }
-          >
-            <MdDarkMode {...iconSize("24px")} />
-          </IconButton>
-        </Nav>
+        <Nav />
         <FlowBase>{props.children}</FlowBase>
         <Nav />
       </Base>
