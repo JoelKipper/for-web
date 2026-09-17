@@ -20,6 +20,26 @@ const POLL_INTERVAL_MS = 2000;
 type Row = { label: string; value: string };
 
 /**
+ * The subset of VideoSenderStats we actually read - built by hand from the
+ * raw RTCRtpSender report instead of livekit-client's own getSenderStats(),
+ * so it doesn't claim to have the full (required) VideoSenderStats shape.
+ */
+type SenderSample = Pick<
+  VideoSenderStats,
+  | "streamId"
+  | "frameWidth"
+  | "frameHeight"
+  | "framesPerSecond"
+  | "bytesSent"
+  | "timestamp"
+  | "targetBitrate"
+  | "qualityLimitationReason"
+  | "packetsLost"
+  | "roundTripTime"
+  | "jitter"
+>;
+
+/**
  * bytesSent/bytesReceived delta between two samples, converted to kbps.
  * Returns undefined for the first sample (nothing to diff against).
  */
@@ -46,12 +66,52 @@ function msRow(label: string, seconds: number | undefined): Row | undefined {
 }
 
 /**
+ * Builds sender stats straight from the RTCRtpSender, bypassing livekit-
+ * client's own getSenderStats(). Hardware-accelerated encoders (notably
+ * H.264, which screen share now uses - see state.tsx) commonly leave
+ * frameWidth/frameHeight/framesPerSecond/bytesSent unset or stuck at 0 on
+ * the outbound-rtp stat itself, even while frames are actively being sent.
+ * The paired "media-source" stat reports the real captured
+ * resolution/fps/timestamp regardless of codec or encoder backend, so fall
+ * back to it whenever the encoder-reported fields are missing.
+ */
+async function buildSenderStats(
+  sender: RTCRtpSender,
+): Promise<SenderSample | undefined> {
+  const report = await sender.getStats();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  for (const v of report.values() as Iterable<any>) {
+    if (v.type !== "outbound-rtp" || v.kind !== "video") continue;
+
+    const mediaSource = v.mediaSourceId
+      ? report.get(v.mediaSourceId)
+      : undefined;
+    const remote = v.remoteId ? report.get(v.remoteId) : undefined;
+
+    return {
+      streamId: v.id,
+      frameWidth: v.frameWidth ?? mediaSource?.width,
+      frameHeight: v.frameHeight ?? mediaSource?.height,
+      framesPerSecond: v.framesPerSecond ?? mediaSource?.framesPerSecond,
+      bytesSent: v.bytesSent,
+      timestamp: v.timestamp ?? mediaSource?.timestamp,
+      targetBitrate: v.targetBitrate,
+      qualityLimitationReason: v.qualityLimitationReason,
+      packetsLost: remote?.packetsLost,
+      roundTripTime: remote?.roundTripTime,
+      jitter: remote?.jitter,
+    };
+  }
+  return undefined;
+}
+
+/**
  * Builds display rows for a local (outgoing) screen share track, i.e. what
  * you're actually sending, as opposed to what LiveKit was asked to send.
  */
 function senderRows(
-  current: VideoSenderStats,
-  prev: VideoSenderStats | undefined,
+  current: SenderSample,
+  prev: SenderSample | undefined,
 ): Row[] {
   const rows: Row[] = [
     {
@@ -154,15 +214,15 @@ export function StreamStats(props: {
   const [rows, setRows] = createSignal<Row[]>([]);
 
   let timer: ReturnType<typeof setInterval> | undefined;
-  let prevSender: VideoSenderStats | undefined;
+  let prevSender: SenderSample | undefined;
   let prevReceiver: VideoReceiverStats | undefined;
 
   async function poll() {
     const videoTrack = props.track.publication?.videoTrack;
     if (!videoTrack) return;
 
-    if ("getSenderStats" in videoTrack) {
-      const [current] = await videoTrack.getSenderStats();
+    if ("sender" in videoTrack && videoTrack.sender) {
+      const current = await buildSenderStats(videoTrack.sender);
       if (current) {
         setRows(senderRows(current, prevSender));
         prevSender = current;
