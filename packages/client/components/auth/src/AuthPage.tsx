@@ -8,7 +8,7 @@ import { IconButton, iconSize } from "@revolt/ui";
 
 import MdDarkMode from "@material-design-icons/svg/filled/dark_mode.svg?component-solid";
 
-import background from "./background.jpg";
+import DarkVeil from "./DarkVeil";
 import { FlowBase } from "./flows/Flow";
 
 /**
@@ -27,14 +27,25 @@ const Base = styled("div", {
     flexDirection: "column",
     justifyContent: "space-between",
 
-    background: "var(--url)",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
+    // sits above the fixed DarkVeil layer (z-index 0) below
+    position: "relative",
+    zIndex: 1,
 
     mdDown: {
       padding: "30px 20px",
     },
+  },
+});
+
+/**
+ * Fills the viewport behind everything else - stays put while Base
+ * scrolls, so it never scrolls the actual shader canvas.
+ */
+const VeilLayer = styled("div", {
+  base: {
+    position: "fixed",
+    inset: 0,
+    zIndex: 0,
   },
 });
 
@@ -73,11 +84,11 @@ export function AuthPage(props: { children: JSX.Element }) {
 
   return (
     <Root>
+      <VeilLayer>
+        <DarkVeil hueShift={265} warpAmount={0.15} resolutionScale={0.75} />
+      </VeilLayer>
       <Titlebar />
-      <Base
-        style={{ "--url": `url('${background}')` }}
-        css={{ scrollbar: "hidden" }}
-      >
+      <Base css={{ scrollbar: "hidden" }}>
         <Nav>
           <IconButton
             variant="tonal"

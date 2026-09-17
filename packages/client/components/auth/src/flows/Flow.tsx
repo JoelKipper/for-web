@@ -17,9 +17,9 @@ export const FlowBase = styled("div", {
     flexDirection: "column",
     gap: "var(--gap-lg)",
     flexGrow: 0,
-    // Glass-over-photo: the auth page now shows background.jpg behind
-    // this card (see AuthPage.tsx), so a fully opaque surface colour no
-    // longer fits - let it show through instead.
+    // Glass-over-shader: the auth page shows an animated DarkVeil canvas
+    // behind this card (see AuthPage.tsx), so a fully opaque surface
+    // colour no longer fits - let it show through instead.
     background:
       "color-mix(in srgb, var(--md-sys-color-surface-container) 82%, transparent)",
     backdropFilter: "blur(32px)",
