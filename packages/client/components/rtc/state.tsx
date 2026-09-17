@@ -690,14 +690,20 @@ class Voice {
             // Simulcast makes the encoder continuously produce an extra
             // lower-res layer alongside the real one - pure encoder CPU
             // overhead screen share to a small self-hosted instance
-            // doesn't need. VP8 (the room-wide default codec, tuned for
-            // camera video) is software-only in effectively every
-            // browser; H.264 is usually hardware-accelerated, which is
-            // what actually makes sustained 1080p60 achievable. Codec and
-            // simulcast are fixed at publish time (can't be changed by
-            // the quality-switch codepath below), so set both here.
+            // doesn't need. Simulcast is fixed at publish time (can't be
+            // changed by the quality-switch codepath below), so set it here.
+            //
+            // We previously also forced videoCodec: "h264" here, on the
+            // assumption that it'd be hardware-accelerated where VP8 (the
+            // room-wide default) is software-only. In practice this isn't
+            // reliable - confirmed via the OS's GPU video-encode engine
+            // sitting at 0% during an active H.264 screen share, meaning
+            // Chromium fell back to a software x264 encoder anyway. A
+            // software encoder that then also competes with a CPU/GPU-
+            // heavy foreground app (e.g. a game) for the same core budget
+            // is worse than VP8, not better, so stick with the room's
+            // default codec here instead of forcing one.
             simulcast: false,
-            videoCodec: "h264",
           },
         );
 
