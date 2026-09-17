@@ -494,7 +494,9 @@ class Voice {
         resolution: ScreenSharePresets.h720fps30.resolution,
         fullName: `720p 30FPS`,
         contentHint: "motion",
-        encoding: this.withBitrateOverride(ScreenSharePresets.h720fps30.encoding),
+        encoding: this.withBitrateOverride(
+          ScreenSharePresets.h720fps30.encoding,
+        ),
       },
     };
 
