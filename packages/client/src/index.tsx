@@ -159,6 +159,7 @@ const routes = () => (
       <Route path="/create" component={FlowCreate} />
       <Route path="/create/:code" component={FlowCreate} />
       <Route path="/auth" component={FlowLogin} />
+      <Route path="/auth/:code" component={FlowLogin} />
       <Route path="/resend" component={FlowResend} />
       <Route path="/reset" component={FlowReset} />
       <Route path="/verify/:token" component={FlowVerify} />

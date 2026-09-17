@@ -1,11 +1,12 @@
-import { Match, Switch } from "solid-js";
+import { Match, Show, Switch, createSignal } from "solid-js";
 
 import { Trans } from "@lingui/solid/macro";
 
-import { useClientLifecycle } from "@revolt/client";
+import { useApi, useClientLifecycle } from "@revolt/client";
 import { State, TransitionType } from "@revolt/client/Controller";
+import { useInstance } from "@revolt/instance";
 import { useModals } from "@revolt/modal";
-import { Navigate } from "@revolt/routing";
+import { Navigate, useNavigate, useParams } from "@revolt/routing";
 import {
   Button,
   CircularProgress,
@@ -19,80 +20,183 @@ import MdArrowBack from "@material-design-icons/svg/filled/arrow_back.svg?compon
 
 import { useState } from "@revolt/state";
 import { FlowTitle } from "./Flow";
+import { setFlowCheckEmail } from "./FlowCheck";
 import { Fields, Form } from "./Form";
 import { ProviderButtons } from "./ProviderButtons";
 
+type Step =
+  | { name: "email" }
+  | { name: "password"; email: string; exists: boolean };
+
 /**
- * Flow for logging into an account
+ * stoat-api's published types don't declare /auth/account/exists - that's
+ * a route this fork's backend added (crates/delta/src/routes/account/
+ * account_exists.rs) that the published package hasn't been regenerated
+ * against. Narrowly widens just this one call site rather than the whole
+ * api client, mirroring SpotifyActivity.tsx's editWithActivity.
+ */
+function checkAccountExists(
+  api: { post: (path: string, body: unknown) => Promise<unknown> },
+  email: string,
+): Promise<{ exists: boolean }> {
+  return api.post("/auth/account/exists", { email }) as Promise<{
+    exists: boolean;
+  }>;
+}
+
+/**
+ * Unified flow for logging in or creating an account - a single email
+ * field decides which one this turns into, rather than making the user
+ * pick up front.
  */
 export default function FlowLogin() {
   const state = useState();
   const modals = useModals();
+  const api = useApi();
+  const navigate = useNavigate();
+  const { code } = useParams();
+  const { config } = useInstance();
   const { lifecycle, isLoggedIn, login, selectUsername } = useClientLifecycle();
 
+  const [step, setStep] = createSignal<Step>({ name: "email" });
+
   /**
-   * Log into account
+   * Narrowed accessor for the password step, for <Match>'s keyed
+   * render-prop form below - avoids re-checking/re-casting step().name
+   * at every use site.
+   */
+  const passwordStep = () => {
+    const current = step();
+    return current.name === "password" ? current : undefined;
+  };
+
+  /**
+   * Check whether an account exists for the given email, then advance
    * @param data Form Data
    */
-  async function performLogin(data: FormData) {
+  async function checkEmail(data: FormData) {
     const email = data.get("email") as string;
-    const password = data.get("password") as string;
+    if (!email) return;
 
-    if (!email || !password) return;
-
-    await login(
-      {
-        email,
-        password,
-      },
-      modals,
-    );
+    const { exists } = await checkAccountExists(api, email);
+    setStep({ name: "password", email, exists });
   }
 
   /**
-   * Select a new username
+   * Log into the existing account for this email
    * @param data Form Data
    */
-  async function select(data: FormData) {
-    const username = data.get("username") as string;
-    await selectUsername(username);
+  async function performLogin(data: FormData) {
+    const current = step();
+    if (current.name !== "password") return;
+    const password = data.get("password") as string;
+    if (!password) return;
+
+    await login({ email: current.email, password }, modals);
+  }
+
+  /**
+   * Create a new account for this email
+   * @param data Form Data
+   */
+  async function performCreate(data: FormData) {
+    const current = step();
+    if (current.name !== "password") return;
+    const password = data.get("password") as string;
+    const captcha = data.get("captcha") as string;
+    if (!password) return;
+
+    await api.post("/auth/account/create", {
+      email: current.email,
+      password,
+      captcha,
+      ...(code ? { invite: code } : {}),
+    });
+
+    if (!config.features.email) {
+      await login({ email: current.email, password }, modals);
+      navigate("/login/auth", { replace: true });
+    } else {
+      setFlowCheckEmail(current.email);
+      navigate("/login/check", { replace: true });
+    }
   }
 
   return (
     <>
       <Switch
         fallback={
-          <>
-            <FlowTitle subtitle={<Trans>Sign into Stoat</Trans>} emoji="wave">
-              <Trans>Welcome!</Trans>
-            </FlowTitle>
-            <ProviderButtons />
-            <Form onSubmit={performLogin}>
-              <Fields fields={["email", "password"]} />
-              <Column gap="xl" align>
-                <a href="/login/reset">
-                  <Button variant="text">
-                    <Trans>Reset password</Trans>
+          <Switch>
+            <Match when={step().name === "email"}>
+              <FlowTitle subtitle={<Trans>Sign into Stoat</Trans>} emoji="wave">
+                <Trans>Welcome!</Trans>
+              </FlowTitle>
+              <Form onSubmit={checkEmail}>
+                <Fields fields={["email"]} />
+                <ProviderButtons />
+                <Row align justify>
+                  <a href="..">
+                    <Button variant="text">
+                      <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
+                    </Button>
+                  </a>
+                  <Button type="submit">
+                    <Trans>Continue</Trans>
                   </Button>
-                </a>
-                <a href="/login/resend">
-                  <Button variant="text">
-                    <Trans>Resend verification</Trans>
-                  </Button>
-                </a>
-              </Column>
-              <Row align justify>
-                <a href="..">
-                  <Button variant="text">
-                    <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
-                  </Button>
-                </a>
-                <Button type="submit">
-                  <Trans>Login</Trans>
-                </Button>
-              </Row>
-            </Form>
-          </>
+                </Row>
+              </Form>
+            </Match>
+            <Match when={passwordStep()}>
+              {(current) => (
+                <>
+                  <FlowTitle
+                    subtitle={
+                      current().exists ? (
+                        <Trans>Enter your password</Trans>
+                      ) : (
+                        <Trans>Create a password</Trans>
+                      )
+                    }
+                    emoji="wave"
+                  >
+                    <Trans>Welcome!</Trans>
+                  </FlowTitle>
+                  <Form
+                    onSubmit={current().exists ? performLogin : performCreate}
+                    captcha={
+                      current().exists ? undefined : config.features.captcha.key
+                    }
+                  >
+                    <Fields
+                      fields={[
+                        { field: "email", value: current().email, disabled: true },
+                        current().exists ? "password" : "new-password",
+                      ]}
+                    />
+                    <Show when={!current().exists && config.features.invite_only}>
+                      <Fields fields={[{ field: "invite", value: code }]} />
+                    </Show>
+                    <Row align justify>
+                      <Button
+                        variant="text"
+                        onPress={() => setStep({ name: "email" })}
+                      >
+                        <MdArrowBack {...iconSize("1.2em")} />{" "}
+                        <Trans>Change email</Trans>
+                      </Button>
+                      <Button type="submit">
+                        {current().exists ? (
+                          <Trans>Log In</Trans>
+                        ) : (
+                          <Trans>Create Account</Trans>
+                        )}
+                      </Button>
+                    </Row>
+                  </Form>
+                </>
+              )}
+            </Match>
+          </Switch>
         }
       >
         <Match when={isLoggedIn()}>
@@ -113,7 +217,12 @@ export default function FlowLogin() {
             </Trans>
           </Text>
 
-          <Form onSubmit={select}>
+          <Form
+            onSubmit={async (data) => {
+              const username = data.get("username") as string;
+              await selectUsername(username);
+            }}
+          >
             <Fields fields={["username"]} />
             <Row align justify>
               <Button

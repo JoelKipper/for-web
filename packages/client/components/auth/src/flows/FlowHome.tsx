@@ -68,14 +68,7 @@ export default function FlowHome() {
               <a href="/login/auth">
                 <Column>
                   <Button>
-                    <Trans>Log In</Trans>
-                  </Button>
-                </Column>
-              </a>
-              <a href="/login/create">
-                <Column>
-                  <Button variant="tonal">
-                    <Trans>Sign Up</Trans>
+                    <Trans>Continue</Trans>
                   </Button>
                 </Column>
               </a>
