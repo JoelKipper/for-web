@@ -93,6 +93,8 @@ export function UserCard(
         <Stack>
           <Profile.Bio content={query.data?.content} onClick={openFull} fluid />
           <Profile.Roles member={props.member} fluid />
+          <Profile.Status user={props.user} fluid />
+          <Profile.Spotify user={props.user} fluid />
           <Profile.Badges user={props.user} fluid />
           <Show when={props.bot}>
             <Profile.Owner bot={props.bot!} fluid />

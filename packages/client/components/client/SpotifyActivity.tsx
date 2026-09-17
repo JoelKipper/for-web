@@ -1,5 +1,7 @@
 import { createEffect, onCleanup } from "solid-js";
 
+import { useLingui } from "@lingui/solid/macro";
+
 import { useClient } from "@revolt/client";
 import { useState } from "@revolt/state";
 
@@ -51,7 +53,7 @@ function editWithActivity(
           activity: Activity;
         };
       }
-    | { remove: ["StatusActivity"] },
+    | { remove: ("StatusActivity" | "StatusText")[] },
 ) {
   return self.edit(data as never);
 }
@@ -66,6 +68,7 @@ export function SpotifyActivityWorker() {
   const { settings } = useState();
   const client = useClient();
   const user = useUser();
+  const { t } = useLingui();
 
   let interval: ReturnType<typeof setInterval> | undefined;
   let lastTrackId: string | undefined;
@@ -109,10 +112,19 @@ export function SpotifyActivityWorker() {
     try {
       if (activity) {
         await editWithActivity(self, {
-          status: { ...self.status, activity },
+          status: {
+            ...self.status,
+            text: t`Listening to ${activity.track_name} by ${activity.artist_name}`,
+            activity,
+          },
         });
       } else {
-        await editWithActivity(self, { remove: ["StatusActivity"] });
+        // Mirrors ActivityStatusWorker's "Playing X" - drops whatever
+        // custom status text was showing before, same trade-off that
+        // worker already makes while its toggle is on.
+        await editWithActivity(self, {
+          remove: ["StatusActivity", "StatusText"],
+        });
       }
       console.debug("[SpotifyActivity] status updated ->", trackId);
     } catch (err) {
