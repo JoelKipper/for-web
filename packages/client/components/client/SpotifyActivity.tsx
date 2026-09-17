@@ -15,6 +15,18 @@ import { useUser } from ".";
 const POLL_INTERVAL_MS = 3_000;
 
 /**
+ * Minimum time between self.edit() calls. Stoat's own API rate-limits
+ * PATCH /users/@me to 2 requests per 10s (crates/delta/src/util/
+ * ratelimits.rs, bucket "user_edit") - polling this often means a track
+ * change right at a pause/resume boundary (Spotify's is_playing flaps
+ * briefly there) can fire multiple edits within that window and get
+ * 429'd, which was knocking the whole client into a reconnect. Detection
+ * still happens every POLL_INTERVAL_MS; this only throttles how often we
+ * actually act on it.
+ */
+const MIN_EDIT_GAP_MS = 6_000;
+
+/**
  * Matches the `Activity` shape from stoat-api's generated schema
  * (server-side: crates/core/models/src/v0/users.rs) - defined locally since
  * this package doesn't otherwise depend on stoat-api directly.
@@ -74,6 +86,7 @@ export function SpotifyActivityWorker() {
 
   let interval: ReturnType<typeof setInterval> | undefined;
   let lastTrackId: string | undefined;
+  let lastEditAt = 0;
 
   async function poll() {
     const self = user();
@@ -109,7 +122,14 @@ export function SpotifyActivityWorker() {
       // but the visible card interpolates that locally, so skip the edit.
       return;
     }
+
+    if (Date.now() - lastEditAt < MIN_EDIT_GAP_MS) {
+      // lastTrackId deliberately not updated - retry on the next poll
+      // once the cooldown has passed, rather than dropping this change.
+      return;
+    }
     lastTrackId = trackId;
+    lastEditAt = Date.now();
 
     try {
       if (activity) {
