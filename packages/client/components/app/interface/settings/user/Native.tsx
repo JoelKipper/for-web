@@ -1,4 +1,4 @@
-import { Show, createSignal, onMount } from "solid-js";
+import { Show, createSignal, onCleanup, onMount } from "solid-js";
 
 import { Trans, useLingui } from "@lingui/solid/macro";
 
@@ -19,9 +19,32 @@ declare type DesktopConfig = {
   };
 };
 
+declare type DesktopUpdateStatus = {
+  state:
+    | "unsupported"
+    | "idle"
+    | "checking"
+    | "downloading"
+    | "ready"
+    | "upToDate"
+    | "error";
+  version?: string;
+  error?: string;
+};
+
 declare global {
   interface Window {
     native: {
+      /**
+       * Self-update of the desktop app. Not implemented by every build of
+       * the desktop app - always feature-detect before use.
+       */
+      updater?: {
+        getStatus(): Promise<DesktopUpdateStatus>;
+        check(): Promise<DesktopUpdateStatus>;
+        install(): void;
+        onStatus(callback: (status: DesktopUpdateStatus) => void): () => void;
+      };
       versions: {
         node(): string;
         chrome(): string;
@@ -229,7 +252,79 @@ export default function Native() {
         >
           <Trans>Stoat for Desktop</Trans>
         </CategoryButton>
+        <Show when={window.native.updater}>
+          <UpdateButton />
+        </Show>
       </CategoryButton.Group>
     </Column>
+  );
+}
+
+/**
+ * Check for, download and install a newer desktop app version
+ */
+function UpdateButton() {
+  const { t } = useLingui();
+  const updater = window.native.updater!;
+  const [status, setStatus] = createSignal<DesktopUpdateStatus>({
+    state: "idle",
+  });
+
+  onMount(() => {
+    updater.getStatus().then(setStatus);
+    onCleanup(updater.onStatus(setStatus));
+  });
+
+  const label = () => {
+    switch (status().state) {
+      case "ready":
+        return t`Restart & Install Update`;
+      case "checking":
+      case "downloading":
+        return t`Updating…`;
+      default:
+        return t`Check for Updates`;
+    }
+  };
+
+  const description = () => {
+    const { state, version, error } = status();
+    switch (state) {
+      case "checking":
+        return t`Checking for updates…`;
+      case "downloading":
+        return t`Downloading the latest version…`;
+      case "ready":
+        return t`Version ${version} is ready to install.`;
+      case "upToDate":
+        return t`You're on the latest version.`;
+      case "error":
+        return t`Update failed: ${error}`;
+      case "unsupported":
+        return t`Updates aren't available in this build.`;
+      default:
+        return t`Look for a newer version of Stoat.`;
+    }
+  };
+
+  function onClick() {
+    switch (status().state) {
+      case "ready":
+        return updater.install();
+      case "idle":
+      case "upToDate":
+      case "error":
+        return void updater.check().then(setStatus);
+    }
+  }
+
+  return (
+    <CategoryButton
+      icon={<Symbol>system_update</Symbol>}
+      description={description()}
+      onClick={onClick}
+    >
+      {label()}
+    </CategoryButton>
   );
 }
