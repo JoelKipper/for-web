@@ -33,16 +33,26 @@ type Step =
  * stoat-api's published types don't declare /auth/account/exists - that's
  * a route this fork's backend added (crates/delta/src/routes/account/
  * account_exists.rs) that the published package hasn't been regenerated
- * against. Narrowly widens just this one call site rather than the whole
- * api client, mirroring SpotifyActivity.tsx's editWithActivity.
+ * against. Unlike SpotifyActivity.tsx's editWithActivity (a type-only gap
+ * on an existing, known route), api.post() itself can't be used here: its
+ * param -> query/body split looks up the path in a table baked into
+ * stoat-api from its own OpenAPI snapshot, and silently sends an empty
+ * body for any path missing from that table - confirmed live, this sent
+ * `{}` instead of `{email}` and the backend 422'd trying to deserialize
+ * it. Plain fetch bypasses that lookup entirely.
  */
-function checkAccountExists(
-  api: { post: (path: string, body: unknown) => Promise<unknown> },
+async function checkAccountExists(
+  apiUrl: string,
   email: string,
 ): Promise<{ exists: boolean }> {
-  return api.post("/auth/account/exists", { email }) as Promise<{
-    exists: boolean;
-  }>;
+  const res = await fetch(`${apiUrl}/auth/account/exists`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!res.ok) throw await res.text();
+  return res.json();
 }
 
 /**
@@ -56,7 +66,7 @@ export default function FlowLogin() {
   const api = useApi();
   const navigate = useNavigate();
   const { code } = useParams();
-  const { config } = useInstance();
+  const { config, apiUrl } = useInstance();
   const { lifecycle, isLoggedIn, login, selectUsername } = useClientLifecycle();
 
   const [step, setStep] = createSignal<Step>({ name: "email" });
@@ -79,7 +89,7 @@ export default function FlowLogin() {
     const email = data.get("email") as string;
     if (!email) return;
 
-    const { exists } = await checkAccountExists(api, email);
+    const { exists } = await checkAccountExists(apiUrl, email);
     setStep({ name: "password", email, exists });
   }
 
