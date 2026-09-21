@@ -143,8 +143,8 @@ export default function FlowLogin() {
                 <Trans>Welcome!</Trans>
               </FlowTitle>
               <Form onSubmit={checkEmail}>
-                <Fields fields={["email"]} />
                 <ProviderButtons />
+                <Fields fields={["email"]} />
                 <Row align justify>
                   <a href="..">
                     <Button variant="text">

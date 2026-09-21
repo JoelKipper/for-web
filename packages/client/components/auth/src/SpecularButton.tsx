@@ -269,6 +269,7 @@ const Btn = styled("button", {
     fontWeight: 500,
     letterSpacing: "0.01em",
     lineHeight: 1,
+    whiteSpace: "nowrap",
     color: "var(--sb-text-color)",
     background:
       "color-mix(in srgb, var(--sb-tint) calc(var(--sb-tint-opacity) * 100%), transparent)",
