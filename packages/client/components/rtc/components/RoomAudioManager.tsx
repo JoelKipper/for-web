@@ -1,4 +1,4 @@
-import { createEffect, createMemo } from "solid-js";
+import { Show, createEffect, createMemo } from "solid-js";
 import { AudioTrack, useTracks } from "solid-livekit-components";
 
 import { getTrackReferenceId, isLocal } from "@livekit/components-core";
@@ -8,6 +8,15 @@ import { RemoteTrackPublication, Track } from "livekit-client";
 import { useState } from "@revolt/state";
 
 import { useVoice } from "../state";
+
+import { NarrowedAudioTrack } from "./NarrowedAudioTrack";
+
+/**
+ * Stereo width of incoming voice (0 = mono, 1 = untouched).
+ * Mics on one channel of a stereo interface would otherwise be heard
+ * hard-panned; this keeps it close to mono like Discord.
+ */
+const VOICE_STEREO_WIDTH = 0.15;
 
 export function RoomAudioManager() {
   const voice = useVoice();
@@ -46,22 +55,49 @@ export function RoomAudioManager() {
     <div style={{ display: "none" }}>
       <Key each={filteredTracks()} by={(item) => getTrackReferenceId(item)}>
         {(track) => (
-          <AudioTrack
-            trackRef={track()}
-            volume={
-              state.voice.outputVolume *
-              (track().source === Track.Source.ScreenShareAudio
-                ? state.voice.getScreenShareVolume(track().participant.identity)
-                : state.voice.getUserVolume(track().participant.identity))
+          <Show
+            when={track().source === Track.Source.Microphone}
+            fallback={
+              <AudioTrack
+                trackRef={track()}
+                volume={
+                  state.voice.outputVolume *
+                  (track().source === Track.Source.ScreenShareAudio
+                    ? state.voice.getScreenShareVolume(
+                        track().participant.identity,
+                      )
+                    : state.voice.getUserVolume(track().participant.identity))
+                }
+                muted={
+                  (track().source === Track.Source.ScreenShareAudio
+                    ? state.voice.getScreenShareMuted(
+                        track().participant.identity,
+                      )
+                    : state.voice.getUserMuted(track().participant.identity)) ||
+                  voice.deafen()
+                }
+                enableBoosting
+              />
             }
-            muted={
-              (track().source === Track.Source.ScreenShareAudio
-                ? state.voice.getScreenShareMuted(track().participant.identity)
-                : state.voice.getUserMuted(track().participant.identity)) ||
-              voice.deafen()
-            }
-            enableBoosting
-          />
+          >
+            {/* keeps the track attached and handles muting, audio plays below */}
+            <AudioTrack
+              trackRef={track()}
+              volume={0}
+              muted={
+                state.voice.getUserMuted(track().participant.identity) ||
+                voice.deafen()
+              }
+            />
+            <NarrowedAudioTrack
+              trackRef={track()}
+              width={VOICE_STEREO_WIDTH}
+              volume={
+                state.voice.outputVolume *
+                state.voice.getUserVolume(track().participant.identity)
+              }
+            />
+          </Show>
         )}
       </Key>
     </div>
