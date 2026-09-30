@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.17.0](https://github.com/JoelKipper/for-web/compare/stoat-for-web-v0.16.0...stoat-for-web-v0.17.0) (2026-09-30)
+
+
+### Features
+
+* narrow stereo width of incoming voice audio ([16038ac](https://github.com/JoelKipper/for-web/commit/16038ac7908fc08b6b5b0cb6ff83bd069af0fc2f))
+* narrow stereo width of incoming voice audio ([f6504dd](https://github.com/JoelKipper/for-web/commit/f6504dd43f6e7ea532be0c9f62c66e4772eecb94))
+
 ## [0.16.0](https://github.com/JoelKipper/for-web/compare/stoat-for-web-v0.15.3...stoat-for-web-v0.16.0) (2026-09-16)
 
 

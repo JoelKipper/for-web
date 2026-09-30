@@ -340,8 +340,8 @@ msgid "Able to speak in voice call"
 msgstr "Able to speak in voice call"
 
 #: components/auth/src/AuthPage.tsx
-msgid "About"
-msgstr "About"
+#~ msgid "About"
+#~ msgstr "About"
 
 #: components/modal/modals/SignOutSessions.tsx
 msgid "Accept"
@@ -530,7 +530,6 @@ msgstr "Avatar"
 
 #: components/app/interface/settings/user/_AccountCard.tsx
 #: components/auth/src/flows/FlowCheck.tsx
-#: components/auth/src/flows/FlowCreate.tsx
 #: components/auth/src/flows/FlowLogin.tsx
 #: components/modal/modals/MFAFlow.tsx
 #: src/interface/channels/AgeGate.tsx
@@ -637,8 +636,8 @@ msgid "Bypasses slowmode in channels"
 msgstr "Bypasses slowmode in channels"
 
 #: components/ui/components/features/messaging/composition/picker/GifPicker.tsx
-msgid "Can't find the perfect GIF? Head to Gifbox and upload your own for everyone to use."
-msgstr "Can't find the perfect GIF? Head to Gifbox and upload your own for everyone to use."
+#~ msgid "Can't find the perfect GIF? Head to Gifbox and upload your own for everyone to use."
+#~ msgstr "Can't find the perfect GIF? Head to Gifbox and upload your own for everyone to use."
 
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Can't get discover request status right now"
@@ -717,6 +716,10 @@ msgstr "Change Avatar"
 #: components/modal/modals/EditBotUsername.tsx
 msgid "Change bot username"
 msgstr "Change bot username"
+
+#: components/auth/src/flows/FlowLogin.tsx
+msgid "Change email"
+msgstr "Change email"
 
 #. placeholder {0}: props.member.server!.name
 #: components/modal/modals/ServerIdentity.tsx
@@ -801,9 +804,17 @@ msgstr "Chat Input"
 msgid "Check back often to see if your {0} has been approved!"
 msgstr "Check back often to see if your {0} has been approved!"
 
+#: components/app/interface/settings/user/Native.tsx
+msgid "Check for Updates"
+msgstr "Check for Updates"
+
 #: components/auth/src/flows/FlowCheck.tsx
 msgid "Check your mail!"
 msgstr "Check your mail!"
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Checking for updates…"
+msgstr "Checking for updates…"
 
 #: components/auth/src/flows/FlowLogin.tsx
 msgid "Choose a username"
@@ -883,6 +894,10 @@ msgstr "Code"
 msgid "Collapse call window"
 msgstr "Collapse call window"
 
+#: components/auth/src/flows/ProviderButtons.tsx
+msgid "Coming soon"
+msgstr "Coming soon"
+
 #: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
 msgid "Coming soon! 👀"
 msgstr "Coming soon! 👀"
@@ -908,6 +923,10 @@ msgstr "Confirm action"
 msgid "Connect"
 msgstr "Connect"
 
+#: components/app/interface/settings/user/Account.tsx
+msgid "Connect Spotify"
+msgstr "Connect Spotify"
+
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Connect to voice channel"
 msgstr "Connect to voice channel"
@@ -920,6 +939,10 @@ msgstr "Connected"
 msgid "Connecting"
 msgstr "Connecting"
 
+#: components/app/menus/UserContextMenu.tsx
+msgid "Connection stats"
+msgstr "Connection stats"
+
 #. placeholder {0}: props.discoverable instanceof Bot ? "bot" : "server"
 #: components/app/interface/settings/shared/Discoverable.tsx
 msgid "Contact support to remove this {0} from discover"
@@ -929,6 +952,8 @@ msgstr "Contact support to remove this {0} from discover"
 msgid "Content breaks one or more laws"
 msgstr "Content breaks one or more laws"
 
+#: components/auth/src/flows/FlowHome.tsx
+#: components/auth/src/flows/FlowLogin.tsx
 #: components/modal/modals/LinkWarning.tsx
 #: components/modal/modals/MFAEnableTOTP.tsx
 msgid "Continue"
@@ -941,6 +966,11 @@ msgstr "Continue in browser"
 #: components/auth/src/flows/FlowVerify.tsx
 msgid "Continue to app"
 msgstr "Continue to app"
+
+#. placeholder {0}: provider.label
+#: components/auth/src/flows/ProviderButtons.tsx
+msgid "Continue with {0}"
+msgstr "Continue with {0}"
 
 #: components/app/interface/settings/user/Language.tsx
 msgid "Contribute a language"
@@ -1069,13 +1099,21 @@ msgstr "Create a new group"
 #~ msgid "Create a new role"
 #~ msgstr "Create a new role"
 
+#: components/auth/src/flows/FlowLogin.tsx
+msgid "Create a password"
+msgstr "Create a password"
+
 #: components/modal/modals/CreateWebhook.tsx
 msgid "Create a webhook"
 msgstr "Create a webhook"
 
+#: components/auth/src/flows/FlowLogin.tsx
+msgid "Create Account"
+msgstr "Create Account"
+
 #: components/auth/src/flows/FlowCreate.tsx
-msgid "Create an account"
-msgstr "Create an account"
+#~ msgid "Create an account"
+#~ msgstr "Create an account"
 
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Create and edit server roles"
@@ -1302,6 +1340,10 @@ msgstr "Disable one-time password authenticator"
 msgid "Disabled"
 msgstr "Disabled"
 
+#: components/app/interface/settings/user/Account.tsx
+msgid "Disconnect Spotify"
+msgstr "Disconnect Spotify"
+
 #: components/ui/components/features/voice/callCard/VoiceCallCardStatus.tsx
 msgid "Disconnected"
 msgstr "Disconnected"
@@ -1374,6 +1416,10 @@ msgstr "Donated to Stoat"
 #: components/modal/modals/MFARecovery.tsx
 msgid "Done"
 msgstr "Done"
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Downloading the latest version…"
+msgstr "Downloading the latest version…"
 
 #: components/modal/modals/ReportContent.tsx
 msgid "Drugs or illegal goods"
@@ -1526,6 +1572,10 @@ msgstr "Enter your current password..."
 msgid "Enter your invite code."
 msgstr "Enter your invite code."
 
+#: components/auth/src/flows/FlowLogin.tsx
+msgid "Enter your password"
+msgstr "Enter your password"
+
 #: components/auth/src/flows/Form.tsx
 msgid "Enter your preferred username."
 msgstr "Enter your preferred username."
@@ -1657,12 +1707,12 @@ msgid "Get it on Google Play"
 msgstr "Get it on Google Play"
 
 #: components/ui/components/features/messaging/composition/picker/GifPicker.tsx
-msgid "Gifbox is our own GIF service, so you can keep sharing GIFs right here on Stoat."
-msgstr "Gifbox is our own GIF service, so you can keep sharing GIFs right here on Stoat."
+#~ msgid "Gifbox is our own GIF service, so you can keep sharing GIFs right here on Stoat."
+#~ msgstr "Gifbox is our own GIF service, so you can keep sharing GIFs right here on Stoat."
 
 #: components/ui/components/features/messaging/composition/picker/GifPicker.tsx
-msgid "GIFs are now powered by Gifbox"
-msgstr "GIFs are now powered by Gifbox"
+#~ msgid "GIFs are now powered by Gifbox"
+#~ msgstr "GIFs are now powered by Gifbox"
 
 #: src/interface/Home.tsx
 msgid "Give feedback on Stoat"
@@ -1702,12 +1752,12 @@ msgid "Good"
 msgstr "Good"
 
 #: components/ui/components/features/messaging/composition/picker/GifPicker.tsx
-msgid "Got a better GIF? Share it with everyone on Gifbox."
-msgstr "Got a better GIF? Share it with everyone on Gifbox."
+#~ msgid "Got a better GIF? Share it with everyone on Gifbox."
+#~ msgstr "Got a better GIF? Share it with everyone on Gifbox."
 
 #: components/ui/components/features/messaging/composition/picker/GifPicker.tsx
-msgid "Got it"
-msgstr "Got it"
+#~ msgid "Got it"
+#~ msgstr "Got it"
 
 #. placeholder {0}: countBits(props.context.rolePermissions![role.id].a)
 #. placeholder {1}: countBits(props.context.rolePermissions![role.id].d)
@@ -1736,8 +1786,8 @@ msgid "Hear other people and see their video"
 msgstr "Hear other people and see their video"
 
 #: components/auth/src/flows/FlowCreate.tsx
-msgid "Hello!"
-msgstr "Hello!"
+#~ msgid "Hello!"
+#~ msgstr "Hello!"
 
 #: components/app/interface/settings/user/Language.tsx
 msgid "Help contribute to an existing or new language"
@@ -1952,8 +2002,8 @@ msgid "Launch Stoat when you log into your computer."
 msgstr "Launch Stoat when you log into your computer."
 
 #: components/ui/components/features/messaging/composition/picker/GifPicker.tsx
-msgid "Learn more"
-msgstr "Learn more"
+#~ msgid "Learn more"
+#~ msgstr "Learn more"
 
 #: components/app/interface/settings/user/bots/MyBots.tsx
 msgid "Learn more about how to create bots on Stoat."
@@ -1996,12 +2046,22 @@ msgstr "Light"
 msgid "Listen"
 msgstr "Listen"
 
+#. placeholder {0}: activity.track_name
+#. placeholder {1}: activity.artist_name
+#: components/client/SpotifyActivity.tsx
+msgid "Listening to {0} by {1}"
+msgstr "Listening to {0} by {1}"
+
+#: components/ui/components/features/profiles/ProfileSpotify.tsx
+msgid "Listening to Spotify"
+msgstr "Listening to Spotify"
+
 #. placeholder {0}: humanFileSize(props.file.size ?? 0)
 #: components/ui/components/features/messaging/elements/TextFile.tsx
 msgid "Load file ({0})"
 msgstr "Load file ({0})"
 
-#: components/auth/src/flows/FlowHome.tsx
+#: components/auth/src/flows/FlowLogin.tsx
 msgid "Log In"
 msgstr "Log In"
 
@@ -2019,12 +2079,16 @@ msgid "Log Out Other Sessions"
 msgstr "Log Out Other Sessions"
 
 #: components/auth/src/flows/FlowLogin.tsx
-msgid "Login"
-msgstr "Login"
+#~ msgid "Login"
+#~ msgstr "Login"
 
 #: components/app/interface/settings/user/Sessions.tsx
 msgid "Logs you out of all sessions except this device."
 msgstr "Logs you out of all sessions except this device."
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Look for a newer version of Stoat."
+msgstr "Look for a newer version of Stoat."
 
 #: components/app/interface/settings/server/emojis/EmojiList.tsx
 msgid "Lowercase letters, numbers and underscores only."
@@ -2433,6 +2497,10 @@ msgstr "Open server settings"
 msgid "Open settings"
 msgstr "Open settings"
 
+#: components/auth/src/flows/ProviderButtons.tsx
+msgid "or continue with email"
+msgstr "or continue with email"
+
 #: components/modal/modals/ReportContent.tsx
 msgid "Other"
 msgstr "Other"
@@ -2554,8 +2622,8 @@ msgid "Privacy"
 msgstr "Privacy"
 
 #: components/auth/src/AuthPage.tsx
-msgid "Privacy Policy"
-msgstr "Privacy Policy"
+#~ msgid "Privacy Policy"
+#~ msgstr "Privacy Policy"
 
 #: components/markdown/plugins/anchors.tsx
 msgid "Private Channel"
@@ -2661,8 +2729,8 @@ msgid "Reduced"
 msgstr "Reduced"
 
 #: components/auth/src/flows/FlowCreate.tsx
-msgid "Register"
-msgstr "Register"
+#~ msgid "Register"
+#~ msgstr "Register"
 
 #: components/modal/modals/AddBot.tsx
 msgid "Registered since <0/>"
@@ -2721,6 +2789,10 @@ msgstr "Remove other members' avatars"
 msgid "Remove reaction"
 msgstr "Remove reaction"
 
+#: components/app/interface/settings/user/Account.tsx
+msgid "Remove the Spotify connection."
+msgstr "Remove the Spotify connection."
+
 #: components/app/menus/UserContextMenu.tsx
 #: components/modal/modals/RemoveTimeout.tsx
 msgid "Remove Timeout"
@@ -2774,7 +2846,6 @@ msgstr "Report user"
 msgid "Resend"
 msgstr "Resend"
 
-#: components/auth/src/flows/FlowLogin.tsx
 #: components/auth/src/flows/FlowResend.tsx
 msgid "Resend verification"
 msgstr "Resend verification"
@@ -2793,7 +2864,6 @@ msgid "Reset {0}'s token?"
 msgstr "Reset {0}'s token?"
 
 #: components/auth/src/flows/FlowConfirmReset.tsx
-#: components/auth/src/flows/FlowLogin.tsx
 #: components/auth/src/flows/FlowReset.tsx
 msgid "Reset password"
 msgstr "Reset password"
@@ -2813,6 +2883,10 @@ msgstr "Reset Token"
 #: components/ui/components/features/profiles/ProfileBadges.tsx
 msgid "Responsibly disclosed security issues"
 msgstr "Responsibly disclosed security issues"
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Restart & Install Update"
+msgstr "Restart & Install Update"
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
 #: components/ui/components/features/voice/callCard/VoiceCallCardActiveRoom.tsx
@@ -2899,6 +2973,10 @@ msgstr "Saving…"
 #: components/modal/modals/ReportContent.tsx
 msgid "Scams or fraud"
 msgstr "Scams or fraud"
+
+#: components/app/interface/settings/user/voice/ScreenShareOptions.tsx
+msgid "Screen Share Max Bitrate"
+msgstr "Screen Share Max Bitrate"
 
 #: components/app/interface/settings/user/voice/ScreenShareOptions.tsx
 #: components/modal/modals/ScreenShareSettings.tsx
@@ -3105,13 +3183,21 @@ msgstr "Show Others"
 msgid "Show send message button"
 msgstr "Show send message button"
 
+#: components/app/interface/settings/user/Account.tsx
+msgid "Show what you're listening to as your status, like on Discord."
+msgstr "Show what you're listening to as your status, like on Discord."
+
+#: components/app/interface/settings/user/Account.tsx
+msgid "Show your current Spotify track."
+msgstr "Show your current Spotify track."
+
 #: components/auth/src/flows/FlowLogin.tsx
 msgid "Sign into Stoat"
 msgstr "Sign into Stoat"
 
 #: components/auth/src/flows/FlowHome.tsx
-msgid "Sign Up"
-msgstr "Sign Up"
+#~ msgid "Sign Up"
+#~ msgstr "Sign Up"
 
 #: components/app/interface/channels/text/Message.tsx
 msgid "Silent"
@@ -3177,6 +3263,10 @@ msgstr "Spellchecker"
 #: components/app/interface/settings/user/voice/MicMonitor.tsx
 msgid "Spielt dein bearbeitetes Mikrofonsignal direkt über deine Lautsprecher ab, so wie andere dich in einem Call hören würden. Am besten mit Kopfhörern nutzen, sonst gibt es Rückkopplungen."
 msgstr "Spielt dein bearbeitetes Mikrofonsignal direkt über deine Lautsprecher ab, so wie andere dich in einem Call hören würden. Am besten mit Kopfhörern nutzen, sonst gibt es Rückkopplungen."
+
+#: components/app/interface/settings/user/Account.tsx
+msgid "Spotify Activity"
+msgstr "Spotify Activity"
 
 #: components/ui/components/features/voice/callCard/VoiceCallCardActions.tsx
 msgid "Start camera"
@@ -3315,8 +3405,8 @@ msgid "Terms"
 msgstr "Terms"
 
 #: components/auth/src/AuthPage.tsx
-msgid "Terms of Service"
-msgstr "Terms of Service"
+#~ msgid "Terms of Service"
+#~ msgstr "Terms of Service"
 
 #: components/modal/modals/CreateChannel.tsx
 msgid "Text Channel"
@@ -3586,13 +3676,25 @@ msgstr "Unsolicited advertising or spam"
 msgid "Until I turn it back on"
 msgstr "Until I turn it back on"
 
+#: components/app/interface/settings/user/Native.tsx
+msgid "Update failed: {error}"
+msgstr "Update failed: {error}"
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Updates aren't available in this build."
+msgstr "Updates aren't available in this build."
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Updating…"
+msgstr "Updating…"
+
 #: components/app/interface/settings/channel/permissions/ChannelPermissionsEditor.tsx
 msgid "Upload Files"
 msgstr "Upload Files"
 
 #: components/ui/components/features/messaging/composition/picker/GifPicker.tsx
-msgid "Upload to Gifbox"
-msgstr "Upload to Gifbox"
+#~ msgid "Upload to Gifbox"
+#~ msgstr "Upload to Gifbox"
 
 #: components/modal/modals/JoinServer.tsx
 msgid "Use a code or invite link"
@@ -3688,6 +3790,10 @@ msgstr "Verified"
 #: components/auth/src/flows/FlowVerify.tsx
 msgid "Verifying your account…"
 msgstr "Verifying your account…"
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "Version {version} is ready to install."
+msgstr "Version {version} is ready to install."
 
 #: components/app/interface/settings/user/Native.tsx
 #: components/app/interface/settings/UserSettings.tsx
@@ -3970,6 +4076,10 @@ msgstr "You're already part of this group."
 #: components/modal/modals/Invite.tsx
 msgid "You're already part of this server."
 msgstr "You're already part of this server."
+
+#: components/app/interface/settings/user/Native.tsx
+msgid "You're on the latest version."
+msgstr "You're on the latest version."
 
 #: components/i18n/errors.tsx
 msgid "You've already sent a request to this user."
